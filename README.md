@@ -8,6 +8,7 @@ scanners/
 │   ├── ext_form.py         # 태그 추출 메인 코드
 │   ├── ext_form_test.py    # 태그 추출 테스트 코드
 │   └── ext_save.py         # 추출한 정보 저장
+│   └── ext_result.py       # 전체 결과를 CLI로 출력
 │
 ├── utils/
 │

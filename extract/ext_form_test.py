@@ -1,6 +1,7 @@
 from module.imports import *
 from extract.report_test import report_test
-    
+from extract.ext_result import print_result
+
 class HTMLParser:
     def __init__(self, url, data):
         self.url = url
@@ -24,7 +25,7 @@ class HTMLParser:
         }
         print("="*60)
         print_result(results)
-        # report_test(results)
+        report_test(results)
         # save_test(results)
 
     #form 태그 추출 함수
@@ -81,7 +82,6 @@ class HTMLParser:
             form_inp 태그는 form_data['inputs'] 리스트에 저장되어 있음
             -> 출력 및 데이터를 사용할 때는 form 리스트와 form_inp 리스트를 사용
         """
-        # save_test(forms)
         return forms
 
     """ form 태그 외부의 Input 태그 수집 """
@@ -116,14 +116,14 @@ class HTMLParser:
                 #script 태그 추출 시 요청도 같이 전송
                 session = HTTPSession()
                 session.headers.update(get_headers())
-                get_res = session.get(url=self.url + script.get('src', ''))
+                get_res = session.get(url=self.url, data=script.get('src', ''))
                 scripts.append({
                     'req_url': self.url.strip('/'),
                     'src': script.get('src', ''),
-                    'status_code': get_res.status_code
+                    'status_code': get_res.status_code,
                 })
         #script 태그는 우선 src 있는 것만 가져오도록 설정, 나중에 script 태그 내에 API 가져오도록 설정 필요
-        print(f"scripts: {scripts}")
+        # print(f"scripts: {scripts}")
         return scripts
 
     def parser_infomation(self):
@@ -132,11 +132,11 @@ class HTMLParser:
         
         #정보를 가져오는 패턴식
         patterns = {
-            'text': r'rtms',
+            'text': r'pattern',
         }
         html_text = str(self.soup)
         html_lines = html_text.split('\n')
-        # print(html_lines)
+
         for name, pattern in patterns.items():
             for line_num, line in enumerate(html_lines, 1):
                 matches = re.search(pattern, line, re.IGNORECASE)
@@ -153,7 +153,8 @@ class HTMLParser:
 
 def save_test(results):
     #데이터 저장 공통 코드 (print 코드는 나중에 삭제)
-    with open("ext_form.md", "a", encoding="utf-8") as f:
+    save_file = "extract/save/ext_form.md"
+    with open(save_file, "a", encoding="utf-8") as f:
         if results['forms']:
             for form in results['forms']:
                 # print(f"[{form['method']}] {form['req_url']} [{form['status_code']}]")
@@ -165,32 +166,11 @@ def save_test(results):
         if results['scripts']:
             for script in results['scripts']:
                 # print(f"[SCRIPT] {script['src']}")
-                f.write(f"[SCRIPT] {script['req_url']}{script['src']}\n")
-
-def print_result(results):
-    print(f"{colors('='*60, 'green')}")
-    print(f"{colors('[*] 결과 출력', 'green')}")
-    print(f"form {len(results['forms'])}개  input {len(results['inputs'])}개  script {len(results['scripts'])}개")
-    print(f"{colors('='*60, 'green')}")
-
-    #form 태그 출력
-    if results['forms']:
-        print("FORM 결과")
-        for form in results['forms']:
-            print(f"[{form['method']}][{form['status_code']}] {form['req_url']}")
-            for form_inp in form['inputs']:
-                print(f" └ <{form_inp['tag']} name='{form_inp['name']}' id='{form_inp['id']}' value='{form_inp['value']}'>")
-        
-    if results['inputs']:
-        print("INPUT 결과")
-        for inputs in results['inputs']:
-            print(f"[{inputs['method']}][{inputs['status_code']}] {inputs['req_url']}")
-            # print(f"<{input['tag']} name='{input['name']}' id='{input['id']}' value='{input['value']}'>")
-
-    if results['scripts']:
-        print("SCRIPT 결과")
-        for script in results['scripts']:
-            print(f"[SCRIPT][{script['status_code']}] {script['src']}")
+                is_js = script['src'].lower().endswith('.js')
+                if is_js:
+                    f.write(f"[JS] {script['req_url']}{script['src']}\n")
+                else:
+                    f.write(f"[SCRIPT] {script['req_url']}{script['src']}\n")
 
 def form_ext2(url, data):
     parser = HTMLParser(url, data) 
