@@ -19,7 +19,7 @@ import html
 import requests
 import urllib3
 from pathlib import Path
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from dataclasses import dataclass, field
 from urllib.parse import quote, urlparse, urljoin
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

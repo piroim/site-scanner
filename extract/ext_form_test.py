@@ -9,24 +9,33 @@ class HTMLParser:
         self.soup = BeautifulSoup(data, 'html.parser')
         self._inputs_in_forms = set() #Input 태그 추출 시 중복 방지를 위해 사용
 
-    def parse_all_elements(self):
+    def parse_all_elements(self, tags=None):
         print(f"{colors('[*] 모든 요소 추출 함수 실행', 'green')}")
-        forms = self.parser_form()
-        inputs = self.parser_inputs()
-        scripts = self.parser_script()
-        information = self.parser_infomation()
         
-        results = {
-            'url': self.url,
-            'forms': forms,
-            'inputs': inputs,
-            'scripts': scripts,
-            'information': information
+        tag_parsers = {
+            'forms': self.parser_form,
+            'inputs': self.parser_inputs,
+            'scripts': self.parser_script,
+            'a_tags': self.parser_a,
+            'information': self.parser_infomation
         }
+
+        if tags is None:
+            tags = list(tag_parsers.keys())
+
+        results = {'url': self.url}
+        print(f"tags: {tags}")
+
+        #태그별로 추출 함수 실행(실행 시간이 느릴 수 있음)
+        for tag in tags:
+            print(f"tag: {tag}")
+            if tag in tag_parsers:
+                #tag_parsers[tag]() = parser_form() 형식으로 실행
+                results[tag] = tag_parsers[tag]()
+                print_result(results) #결과 출력
+                report_test(results) #결과 저장
+                print(f"print_result[tag]: {print_result(results)}")
         print("="*60)
-        print_result(results)
-        report_test(results)
-        # save_test(results)
 
     #form 태그 추출 함수
     def parser_form(self):
@@ -106,7 +115,9 @@ class HTMLParser:
                 })
         return inputs
 
-    """ script 태그 추출 함수 """
+    """ script 태그 추출 함수
+        여기에다가 script 태그 가져왔을 때, AJAX 결과 값 가져오도록 추가하면 될 듯 (26.01.01)
+    """
     def parser_script(self):
         print(f"{colors('[*] script 태그 추출 함수 실행', 'green')}")
         scripts = []
@@ -126,6 +137,36 @@ class HTMLParser:
         # print(f"scripts: {scripts}")
         return scripts
 
+    """ A태그 추출 함수 """
+    def parser_a(self):
+        print(f"{colors('[*] A태그 추출 함수 실행', 'green')}")
+        a_tags = []
+        # href 속성이 있는 a 태그만 찾기
+        for a in self.soup.find_all('a', href=True):
+            href = a.get('href', '')
+            # href가 비어있지 않은 경우만 추가
+            if href:
+                a_tags.append({
+                    'href': href,
+                    'text': a.get_text(strip=True),  # 텍스트 추출 수정
+                    'status_code': None,
+                })
+
+        #주석 처리된 a 태그의 href 속성 가져오기
+        for a_comment in self.soup.find_all(string=lambda text: isinstance(text, Comment)):
+            print(f"a_comment: {a_comment}")
+            a_data = BeautifulSoup(a_comment.string, 'html.parser')
+            for a in a_data.find_all('a', href=True):
+                href = a.get('href', '')
+                if href:
+                    a_tags.append({
+                        'href': href,
+                        'text': a_data.get_text(strip=True),
+                        'status_code': None,
+                    })
+        return a_tags
+
+    """ 정보 추출 함수 """
     def parser_infomation(self):
         print(f"{colors('[*] 정보 추출 함수 실행', 'green')}")
         information = []
@@ -151,6 +192,8 @@ class HTMLParser:
 
         return information
 
+    
+
 def save_test(results):
     #데이터 저장 공통 코드 (print 코드는 나중에 삭제)
     save_file = "extract/save/ext_form.md"
@@ -172,6 +215,6 @@ def save_test(results):
                 else:
                     f.write(f"[SCRIPT] {script['req_url']}{script['src']}\n")
 
-def form_ext2(url, data):
-    parser = HTMLParser(url, data) 
-    parser.parse_all_elements()
+def form_ext2(url, data, tags=None):
+    parser = HTMLParser(url, data)
+    parser.parse_all_elements(tags=tags)

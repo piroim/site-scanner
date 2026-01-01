@@ -6,21 +6,20 @@ from module.imports import *
 def print_result(results):
     print(banner("site-scanner banner"))
 
-
     #form 태그 출력
-    if results['forms']:
+    if 'forms' in results:
         print(section("FORM 결과"))
         for form in results['forms']:
             print(f"[{form['method']}][{form['status_code']}] {form['req_url']}")
             for form_inp in form['inputs']:
                 print(f" └ <{form_inp['tag']} name='{form_inp['name']}' id='{form_inp['id']}' value='{form_inp['value']}'>")
         
-    if results['inputs']:
+    if 'inputs' in results:
         print(section("INPUT 결과"))
         for inputs in results['inputs']:
             print(f"[{inputs['method']}][{inputs['status_code']}] {inputs['req_url']}")
 
-    if results['scripts']:
+    if 'scripts' in results:
         print(section("SCRIPT 결과"))
         for script in results['scripts']:
             is_js = script['src'].lower().endswith('.js')
@@ -29,14 +28,19 @@ def print_result(results):
             else:
                 print(f"[SCRIPT][{script['status_code']}] {script['src']}")
 
-    if results['information']:
+    if 'a_tags' in results:
+        print(section("A 태그 결과"))
+        for a in results['a_tags']:
+            print(f"[A][{a['status_code']}] {a['href']}")
+
+    if 'information' in results:
         print(section("INFORMATION 결과"))
         for info in results['information']:
             print(f"[INFO][{info['type']}][{info['line_num']}] {info['line_content']}")
 
     print(f"{colors('='*80, 'green')}")
     print(f"{colors('[*] 전체 결과 출력', 'green')}")
-    print(f"form {len(results['forms'])}개 \ninput {len(results['inputs'])}개 \nscript {len(results['scripts'])}개")
+    print(f"form {len(results.get('forms', []))}개 \ninput {len(results.get('inputs', []))}개 \nscript {len(results.get('scripts', []))}개 \na href {len(results.get('a_tags', []))}개")
     print(f"{colors('='*80, 'green')}")
 
 def banner(text, width=80):

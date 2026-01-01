@@ -7,11 +7,14 @@ def main():
     # session.headers.update({'Cookie': 'PHPSESSID=2m1k4p037ncv91iadrmp1dpro4'})
     set_session = session.headers
     # url = "http://192.168.198.128:22223/board.php"
-    url = "https://url/login.do"
+    url = ""
     res = session.get(url=url)
 
     if res.status_code == 200:
-        form_ext2(url, res.text)
+        #추출할 태그만 설정,기본 값은 전체 추출(None)
+        # tags = None #전체추출
+        tags = ['scripts', 'forms', 'inputs'] #특정 태그 추출
+        form_ext2(url, res.text, tags)
         # form_ext(res.text)
     else:
         print(f"Failed to fetch form data: {res.status_code}")

@@ -26,26 +26,26 @@ def report_test(results, filename="report.html"):
         
         <div class="stats">
             <div class="stat-card" data-text-color="red">
-                <h2>{len(results['forms'])}</h2>
+                <h2>{len(results.get('forms', []))}</h2>
                 <p>Forms</p>
             </div>
             <div class="stat-card" data-text-color="green">
-                <h2>{len(results['inputs'])}</h2>
+                <h2>{len(results.get('inputs', []))}</h2>
                 <p>Inputs</p>
             </div>
             <div class="stat-card" data-text-color="yellow">
-                <h2>{len(results['scripts'])}</h2>
+                <h2>{len(results.get('scripts', []))}</h2>
                 <p>Scripts</p>
             </div>
             <div class="stat-card" data-text-color="blue">
-                <h2>{len(results['information'])}</h2>
+                <h2>{len(results.get('information', []))}</h2>
                 <p>Information</p>
             </div>
         </div>
 """
     
     # Forms 섹션
-    if results['forms']:
+    if 'forms' in results:
         html += """
         <div class="section">
             <div class="section-title" data-text-color="red">📝 Forms</div>
@@ -69,7 +69,7 @@ def report_test(results, filename="report.html"):
         html += "        </div>"
     
     # Inputs 섹션
-    if results['inputs']:
+    if 'inputs' in results:
         html += """
         <div class="section">
             <div class="section-title" data-text-color="green">📥 Inputs</div>
@@ -86,7 +86,7 @@ def report_test(results, filename="report.html"):
         html += "        </div>"
     
     # Scripts 섹션
-    if results['scripts']:
+    if 'scripts' in results:
         html += """
         <div class="section">
             <div class="section-title" data-text-color="yellow">📜 Scripts</div>
@@ -103,7 +103,7 @@ def report_test(results, filename="report.html"):
         html += "        </div>"
     
     # Information 섹션
-    if results['information']:
+    if 'information' in results:
         html += """
         <div class="section">
             <div class="section-title" data-text-color="blue">📝 Information</div>
