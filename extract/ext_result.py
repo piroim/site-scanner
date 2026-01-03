@@ -25,8 +25,10 @@ def print_result(results):
             is_js = script['src'].lower().endswith('.js')
             if is_js:
                 print(f"[JS][{script['status_code']}] {script['src']}")
-            else:
-                print(f"[SCRIPT][{script['status_code']}] {script['src']}")
+            elif script['ajax_urls']:
+                print(f"[AJAX][{script['status_code']}] {script['ajax_urls']}")
+            # else:
+            #     print(f"[SCRIPT][{script['status_code']}] {script['src']}")
 
     if 'a_tags' in results:
         print(section("A 태그 결과"))

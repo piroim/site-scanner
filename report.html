@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scanner Report</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #eee;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #00d4ff;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* 통계 카드 */
+.stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px 40px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-card h2 {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
+/* 섹션 */
+.section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 아이템 */
+.item {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    font-family: 'Consolas', monospace;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-break: break-all;
+}
+
+.sub-item {
+    margin-left: 30px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #666;
+    font-size: 0.9em;
+    color: #888;
+}
+
+/* 공통 뱃지 스타일 */
+.badge {
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    color: #000;
+}
+
+/* 색상 테마 - 데이터 속성으로 관리 */
+[data-color="red"] { background: #ff6b6b; color: #000; }
+[data-color="green"] { background: #4ecdc4; color: #000; }
+[data-color="yellow"] { background: #ffe66d; color: #000; }
+[data-color="blue"] { background: #00d4ff; color: #000; }
+
+[data-text-color="red"] { color: #ff6b6b; }
+[data-text-color="green"] { color: #4ecdc4; }
+[data-text-color="yellow"] { color: #ffe66d; }
+[data-text-color="blue"] { color: #00d4ff; }
+
+/* 상태 */
+.status.success { background: #2ecc71; color: #000; }
+.status.error { background: #e74c3c; color: #fff; }
+
+/* URL/컨텐츠 */
+.content {
+    flex: 1;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    color: #aaa;
+}
+
+.timestamp {
+    text-align: center;
+    color: #666;
+    margin-top: 30px;
+    font-size: 0.9em;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Web Scanner Report</h1>
+        
+        <div class="stats">
+            <div class="stat-card" data-text-color="red">
+                <h2>0</h2>
+                <p>Forms</p>
+            </div>
+            <div class="stat-card" data-text-color="green">
+                <h2>0</h2>
+                <p>Inputs</p>
+            </div>
+            <div class="stat-card" data-text-color="yellow">
+                <h2>10</h2>
+                <p>Scripts</p>
+            </div>
+            <div class="stat-card" data-text-color="blue">
+                <h2>0</h2>
+                <p>Information</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title" data-text-color="yellow">📜 Scripts</div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/lib/jquery-3.6.3.min.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/lib/jquery.nice-select.min-1.0.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/lib/swiper-bundle.min.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/ui.common.min.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/app/js/common/constants.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/app/js/common/enums.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/app/js/common/commUtil.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.krinline</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/lib/slick.min.js</span>
+                <span class="badge status success">200</span>
+            </div>
+
+            <div class="item">
+                <span class="badge" data-color="yellow">SCRIPT</span>
+                <span class="content">https://www.lxhausys.co.kr/assets/js/main.js</span>
+                <span class="badge status success">200</span>
+            </div>
+        </div>
+        <div class="timestamp">
+            Generated at 2026-01-03 20:28:40
+        </div>
+    </div>
+</body>
+</html>

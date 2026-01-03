@@ -1,6 +1,7 @@
 from module.imports import *
 from extract.report_test import report_test
 from extract.ext_result import print_result
+from module.patterns import get_ajax_urls
 
 class HTMLParser:
     def __init__(self, url, data):
@@ -34,7 +35,6 @@ class HTMLParser:
                 results[tag] = tag_parsers[tag]()
                 print_result(results) #결과 출력
                 report_test(results) #결과 저장
-                print(f"print_result[tag]: {print_result(results)}")
         print("="*60)
 
     #form 태그 추출 함수
@@ -132,9 +132,33 @@ class HTMLParser:
                     'req_url': self.url.strip('/'),
                     'src': script.get('src', ''),
                     'status_code': get_res.status_code,
+                    'ajax_urls': [], #ajax 요청 URL 추출
                 })
-        #script 태그는 우선 src 있는 것만 가져오도록 설정, 나중에 script 태그 내에 API 가져오도록 설정 필요
-        # print(f"scripts: {scripts}")
+            elif not src:
+                content = script.get_text(strip=True)
+                ajax_urls = get_ajax_urls(self, content)
+
+                #값이 있는 LIST만 추가
+                if ajax_urls: 
+                    # print(f"[DEBUG] ajax_url: {ajax_urls}")
+                    session = HTTPSession()
+                    session.headers.update(get_headers())
+
+                    if ajax_urls[1] == 'GET':
+                        get_res = session.get(url=self.url, data=ajax_urls[0])
+                        scripts.append({
+                            'req_url': self.url.strip('/'),
+                            'src': 'inline',
+                            'status_code': get_res.status_code,
+                            'ajax_urls': ajax_urls[0]
+                        })
+                    elif ajax_urls[1] == 'POST':
+                        # get_res = session.post(url=self.url, data=ajax_urls[0])
+                        print(f"POST TEST: {ajax_urls[0]}")
+                    else:
+                        print(f"{colors('[*] 메서드 오류', 'red')}")
+
+                
         return scripts
 
     """ A태그 추출 함수 """
@@ -191,8 +215,6 @@ class HTMLParser:
                     print(f"information: {name}:{line_num} : {line.strip()}")
 
         return information
-
-    
 
 def save_test(results):
     #데이터 저장 공통 코드 (print 코드는 나중에 삭제)

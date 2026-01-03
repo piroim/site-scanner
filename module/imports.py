@@ -27,6 +27,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # 내부 모듈
 from module.headers_module import get_headers, get_data, get_proxy, HTTPSession
 from module.console_module import ConsolePrinter, col, colors, banner
+from module.patterns import get_ajax_urls
 from extract.ext_form import form_ext
 from extract.ext_form_test import form_ext2
 
