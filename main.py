@@ -7,7 +7,7 @@ def main():
     # session.headers.update({'Cookie': 'PHPSESSID=2m1k4p037ncv91iadrmp1dpro4'})
     set_session = session.headers
     # url = "http://192.168.198.128:22223/board.php"
-    url = "https://www.lxhausys.co.kr/"
+    url = "url"
     res = session.get(url=url)
 
     if res.status_code == 200:
