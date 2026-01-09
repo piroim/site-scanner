@@ -22,13 +22,23 @@ def print_result(results):
     if 'scripts' in results:
         print(section("SCRIPT 결과"))
         for script in results['scripts']:
-            is_js = script['src'].lower().endswith('.js')
-            if is_js:
-                print(f"[JS][{script['status_code']}] {script['src']}")
-            elif script['ajax_urls']:
-                print(f"[AJAX][{script['status_code']}] {script['ajax_urls']}")
-            # else:
-            #     print(f"[SCRIPT][{script['status_code']}] {script['src']}")
+            src = script['src'].lower()
+
+            if src.startswith(('http://', 'https://', '//')):
+                full_url = src
+            else:
+                full_url = f"{script['req_url']}{src}"
+            
+            #확장자가 더 있는 경우 여기에 추가
+            if src.endswith('.js'):
+                label = 'JS'
+            elif src.endswith('.jsp'):
+                label = 'JSP'
+            else:
+                label = 'SCRIPT'
+            print(f"[{label}][{script['status_code']}] {full_url}")
+            if script['ajax_urls']:
+                print(f" └ AJAX: {script['ajax_urls']}")
 
     if 'a_tags' in results:
         print(section("A 태그 결과"))

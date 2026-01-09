@@ -93,10 +93,15 @@ def report_test(results, filename="report.html"):
 """
         for script in results['scripts']:
             status_class = "success" if script.get('status_code') == 200 else "error"
+            src = script['src'].lower()
+            if src.startswith(('http://', 'https://', '//')):
+                full_url = src
+            else:
+                full_url = f"{script['req_url']}{src}"
             html += f"""
             <div class="item">
                 <span class="badge" data-color="yellow">SCRIPT</span>
-                <span class="content">{escape(script['req_url'])}{escape(script['src'])}</span>
+                <span class="content">{escape(full_url)}</span>
                 <span class="badge status {status_class}">{script.get('status_code', 'N/A')}</span>
             </div>
 """
