@@ -1,4 +1,20 @@
-# 📋 [site_scanner] Development Log
+# ⚙️ [site_scanner] Development Log
+
+## [2026.01.25]
+### 📋 수정사항
+- site_scanner 구조 및 소스코드 변경
+
+### 🔧 진행예정
+
+[예정] 결과 파일을 다운로드 할 때, 사용자 측면에서 바로 활용할 수 있는 방안 구성\
+[예정] 스캔 결과를 이용해서 사전에 작성한 Payload를 기반으로 공격을 자동화하는 기능 추가\
+[예정] 스캔 및 공격 결과를 리포팅 할 수 있도록 csv 또는 html 기반으로 출력해서 바로 목록화할 수 있도록 하는 기능 추가\
+
+### 📌 사용 가능한 기능
+1. 
+### 💡 메모
+[기능] script 태그에서 urlparams로 가져오는 dom 기반의 경로 및 정보를 가져오는 코드라인 추가
+- ex) const paramValue = urlParams.get('test');
 
 ## [2026.01.09]
 ### 수정사항
@@ -27,7 +43,6 @@
 ### 📌 TODO
 [완료] SCRIPT 태그의 AJAX 값에 있는 Path 정보 가져오는 작업
 [완료] AJAX 값의 Method GET/POST 요청에 따른 방식 구분 완료
-
 
 ### 💡 메모
 - session을 사용해서 요청을 보낼 때, 함수나 클래스에 적용해서 사용 필요함(계속 반복 사용)

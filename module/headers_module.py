@@ -10,15 +10,14 @@ class HTTPSession(requests.Session):
         # self.headers.update(get_headers())
 
 """burp_request 헤더 입력 시, 자동 변환 (유동적인 값은 .update 사용)"""
+# 아직까지는 필요 없으며, 특정 대상을 고정으로 해야 한다면 그때 사용
 def get_headers() -> dict:
     #원문 헤더 문자열 변환
     header_data = """
-        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
-        Accept-Encoding: gzip, deflate, br
-        Accept: */*
-        Connection: keep-alive
+    
     """
     return parse_headers(header_data)
+
 
 def parse_headers(header_data: str) -> dict:
     #HTTP 헤더를 Dictionary로 파싱

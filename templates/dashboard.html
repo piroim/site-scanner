@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Scanner Dashboard</title>
+    <script>
+        // 페이지 로드 전 테마 즉시 적용 (깜빡임 방지)
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">🔍</div>
+                <span>Site Scanner</span>
+            </div>
+        </div>
+        
+        <!-- Scan Input Section -->
+        <div class="scan-section">
+            <div class="scan-header">
+                <h3>스캔 설정</h3>
+            </div>
+            
+            <div class="scan-input-area">
+                <textarea id="urlInput" placeholder="스캔할 URL 입력&#10;&#10;예시:&#10;https://example.com&#10;https://test.com"></textarea>
+            </div>
+            
+            <div class="scan-buttons">
+                <button id="btnScan" class="btn btn-primary" onclick="startScan()">
+                    <span class="btn-icon">▶</span> Start
+                </button>
+                <button id="btnStop" class="btn btn-danger" onclick="stopScan()" disabled>
+                    <span class="btn-icon">■</span> Stop
+                </button>
+                <a href="/settings" class="btn btn-settings">
+                    <span class="btn-icon">⚙</span> Settings
+                </a>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressPercent">0%</span>
+                    <span id="currentUrl" class="current-url"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Site List -->
+        <div class="site-list-header">
+            <h3>스캔된 사이트</h3>
+            <span class="site-count" id="siteCount">0</span>
+        </div>
+        
+        <div class="site-list" id="siteList">
+            <div class="empty-site-list">스캔 결과가 여기에 표시됩니다</div>
+        </div>
+        
+        <!-- Log Section -->
+        <div class="log-section">
+            <div class="log-header">
+                <h3>로그</h3>
+                <button class="btn-clear" onclick="clearLogs()">지우기</button>
+            </div>
+            <div class="log-container" id="logContainer"></div>
+        </div>
+        
+        <!-- Save/Load Section -->
+        <div class="storage-section">
+            <div class="storage-header">
+                <h3>저장 / 불러오기</h3>
+            </div>
+            <div class="storage-buttons">
+                <button class="btn btn-small btn-save" onclick="saveResults()">
+                    💾 저장
+                </button>
+                <button class="btn btn-small btn-load" onclick="toggleHistory()">
+                    📂 기록
+                </button>
+                <button class="btn btn-small btn-export" onclick="exportMarkdown()">
+                    📄 MD추출
+                </button>
+            </div>
+            
+            <!-- History Panel -->
+            <div class="history-panel" id="historyPanel" style="display: none;">
+                <div class="history-actions">
+                    <button class="btn btn-small btn-primary" onclick="loadSelectedHistory()">불러오기</button>
+                    <button class="btn btn-small" onclick="loadAllHistory()">전체</button>
+                    <button class="btn btn-small" onclick="clearHistorySelection()">해제</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteAllHistory()">전체삭제</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="loading">로딩 중...</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card form">
+                <div class="stat-label">Forms</div>
+                <div class="stat-value" id="formCount">0</div>
+            </div>
+            <div class="stat-card input">
+                <div class="stat-label">Inputs</div>
+                <div class="stat-value" id="inputCount">0</div>
+            </div>
+            <div class="stat-card script">
+                <div class="stat-label">Scripts</div>
+                <div class="stat-value" id="scriptCount">0</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-label">Information</div>
+                <div class="stat-value" id="infoCount">0</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <span class="filter-label">Filter : </span>
+            <div class="filter-tags">
+                <button class="filter-tag active" data-filter="all">ALL</button>
+                <button class="filter-tag form" data-filter="form">Form</button>
+                <button class="filter-tag input" data-filter="input">Input</button>
+                <button class="filter-tag script" data-filter="script">Script</button>
+                <button class="filter-tag info" data-filter="info">Info</button>
+            </div>
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="searchInput" placeholder="URL 또는 내용 검색...">
+            </div>
+            <button class="btn btn-small" onclick="clearResults()">초기화</button>
+        </div>
+
+        <!-- Results Table -->
+        <div class="results-section">
+            <div class="results-header">
+                <span class="results-title">📋 발견된 항목</span>
+                <span class="results-count" id="resultsCount">0개 항목</span>
+            </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px">타입</th>
+                        <th style="width: 200px">사이트</th>
+                        <th style="width: 70px">메소드</th>
+                        <th>URL / 내용</th>
+                        <th style="width: 70px">상태</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            URL을 입력하고 스캔을 시작하세요
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Timestamp -->
+        <div class="timestamp" id="timestamp"></div>
+    </main>
+
+    <script>
+        // ========================================
+        // 상태 관리
+        // ========================================
+        let scanData = { sites: [], results: [] };
+        let state = {
+            selectedSites: [],
+            activeFilter: 'all',
+            searchQuery: ''
+        };
+        let pollingInterval = null;
+
+        // ========================================
+        // 테마 설정 (서버 설정과 localStorage 동기화)
+        // ========================================
+        async function syncTheme() {
+            try {
+                const response = await fetch('/api/settings');
+                const data = await response.json();
+                if (data.display_options) {
+                    const isDarkMode = data.display_options.dark_mode ?? true;
+                    // localStorage와 서버 설정 동기화
+                    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                    if (!isDarkMode) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.removeAttribute('data-theme');
+                    }
+                }
+            } catch (error) {
+                console.log('테마 설정 불러오기 실패');
+            }
+        }
+        syncTheme();
+
+        // ========================================
+        // 스캔 제어
+        // ========================================
+        async function startScan() {
+            const urlText = document.getElementById('urlInput').value.trim();
+            if (!urlText) {
+                alert('URL을 입력해주세요');
+                return;
+            }
+
+            const urls = urlText.split('\n')
+                .map(u => u.trim())
+                .filter(u => u && (u.startsWith('http://') || u.startsWith('https://')));
+
+            if (urls.length === 0) {
+                alert('올바른 URL을 입력해주세요 (http:// 또는 https://로 시작)');
+                return;
+            }
+
+            // 설정에서 스캔 옵션 불러오기
+            let options = { forms: true, inputs: true, scripts: true, info: true };
+            try {
+                const settingsRes = await fetch('/api/settings');
+                const settingsData = await settingsRes.json();
+                if (settingsData.scan_options) {
+                    options = settingsData.scan_options;
+                }
+            } catch (e) {
+                console.log('설정 불러오기 실패, 기본값 사용');
+            }
+
+            try {
+                const response = await fetch('/api/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ urls, options })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('btnScan').disabled = true;
+                    document.getElementById('btnStop').disabled = false;
+                    document.getElementById('progressContainer').style.display = 'block';
+                    startPolling();
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('서버 연결 실패: ' + error.message);
+            }
+        }
+
+        async function stopScan() {
+            try {
+                await fetch('/api/stop', { method: 'POST' });
+                document.getElementById('btnScan').disabled = false;
+                document.getElementById('btnStop').disabled = true;
+            } catch (error) {
+                console.error('Stop error:', error);
+            }
+        }
+
+        async function clearResults() {
+            try {
+                await fetch('/api/clear', { method: 'POST' });
+                scanData = { sites: [], results: [] };
+                state.selectedSites = [];
+                renderAll();
+            } catch (error) {
+                console.error('Clear error:', error);
+            }
+        }
+
+        // ========================================
+        // 상태 폴링
+        // ========================================
+        function startPolling() {
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(fetchStatus, 500);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        async function fetchStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                // 진행률 업데이트
+                document.getElementById('progressFill').style.width = data.progress + '%';
+                document.getElementById('progressPercent').textContent = data.progress + '%';
+                document.getElementById('currentUrl').textContent = data.current_url;
+
+                // 결과 업데이트
+                scanData = data.results;
+                state.selectedSites = scanData.sites.map(s => s.id);
+                renderAll();
+
+                // 로그 업데이트
+                renderLogs(data.logs);
+
+                // 스캔 완료 체크
+                if (!data.is_running && data.progress >= 100) {
+                    document.getElementById('btnScan').disabled = false;
+                    document.getElementById('btnStop').disabled = true;
+                    stopPolling();
+                    updateTimestamp();
+                }
+            } catch (error) {
+                console.error('Polling error:', error);
+            }
+        }
+
+        // ========================================
+        // 렌더링 함수들
+        // ========================================
+        function renderSiteList() {
+            const container = document.getElementById('siteList');
+            document.getElementById('siteCount').textContent = scanData.sites.length;
+
+            if (scanData.sites.length === 0) {
+                container.innerHTML = '<div class="empty-site-list">스캔 결과가 여기에 표시됩니다</div>';
+                return;
+            }
+
+            container.innerHTML = scanData.sites.map(site => `
+                <div class="site-item ${state.selectedSites.includes(site.id) ? 'active' : ''}"
+                     onclick="toggleSite(${site.id})">
+                    <div class="site-checkbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div class="site-info">
+                        <div class="site-url">${site.url}</div>
+                        <div class="site-stats">${site.lastScan}</div>
+                    </div>
+                    <button class="btn-site-delete" onclick="event.stopPropagation(); deleteSite(${site.id})" title="사이트 삭제">×</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleSite(siteId) {
+            const idx = state.selectedSites.indexOf(siteId);
+            if (idx > -1) {
+                // 전부 해제 가능하도록 조건 제거
+                state.selectedSites.splice(idx, 1);
+            } else {
+                state.selectedSites.push(siteId);
+            }
+            renderAll();
+        }
+
+        function deleteSite(siteId) {
+            // 사이트 삭제
+            scanData.sites = scanData.sites.filter(s => s.id !== siteId);
+            // 해당 사이트의 결과도 삭제
+            scanData.results = scanData.results.filter(r => r.siteId !== siteId);
+            // 선택 목록에서도 제거
+            state.selectedSites = state.selectedSites.filter(id => id !== siteId);
+            renderAll();
+        }
+
+        function getFilteredResults() {
+            return scanData.results.filter(result => {
+                if (!state.selectedSites.includes(result.siteId)) return false;
+                if (state.activeFilter !== 'all' && result.type !== state.activeFilter) return false;
+                if (state.searchQuery) {
+                    const query = state.searchQuery.toLowerCase();
+                    const matchUrl = (result.url || '').toLowerCase().includes(query);
+                    const matchContent = (result.content || '').toLowerCase().includes(query);
+                    const matchDetails = (result.details || []).some(d => d.toLowerCase().includes(query));
+                    if (!matchUrl && !matchContent && !matchDetails) return false;
+                }
+                return true;
+            });
+        }
+
+        function updateStats() {
+            const relevant = scanData.results.filter(r => state.selectedSites.includes(r.siteId));
+            document.getElementById('formCount').textContent = relevant.filter(r => r.type === 'form').length;
+            document.getElementById('inputCount').textContent = relevant.filter(r => r.type === 'input').length;
+            document.getElementById('scriptCount').textContent = relevant.filter(r => r.type === 'script').length;
+            document.getElementById('infoCount').textContent = relevant.filter(r => r.type === 'info').length;
+        }
+
+        function renderResults() {
+            const filtered = getFilteredResults();
+            const tbody = document.getElementById('resultsBody');
+            document.getElementById('resultsCount').textContent = `${filtered.length}개 항목`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">
+                    ${scanData.results.length === 0 ? 'URL을 입력하고 스캔을 시작하세요' : '조건에 맞는 결과가 없습니다'}
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(result => {
+                const site = scanData.sites.find(s => s.id === result.siteId);
+                const statusClass = result.status === 200 ? 'success' : 'error';
+                const methodClass = (result.method || 'GET').toLowerCase();
+
+                let detailsHtml = '';
+                if (result.details && result.details.length > 0) {
+                    detailsHtml = `<div class="sub-items">${result.details.map(d => `<div class="sub-item">└ ${escapeHtml(d)}</div>`).join('')}</div>`;
+                }
+
+                return `
+                    <tr>
+                        <td><span class="type-badge ${result.type}">${result.type}</span></td>
+                        <td class="url-cell">${site ? site.url : 'N/A'}</td>
+                        <td><span class="method-badge ${methodClass}">${result.method || '-'}</span></td>
+                        <td class="detail-cell">
+                            <div class="url-cell">${escapeHtml(result.url || result.content || '-')}</div>
+                            ${detailsHtml}
+                        </td>
+                        <td><span class="status-badge ${statusClass}">${result.status || 'N/A'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLogs(logs) {
+            const container = document.getElementById('logContainer');
+            container.innerHTML = logs.map(log => `<div class="log-item">${escapeHtml(log)}</div>`).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('logContainer').innerHTML = '';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderAll() {
+            renderSiteList();
+            updateStats();
+            renderResults();
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `Last scan: ${now.toLocaleString('ko-KR')}`;
+        }
+
+        // ========================================
+        // 이벤트 리스너
+        // ========================================
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                state.activeFilter = this.dataset.filter;
+                renderResults();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            state.searchQuery = e.target.value;
+            renderResults();
+        });
+
+        // Enter 키로 스캔 시작
+        document.getElementById('urlInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                startScan();
+            }
+        });
+
+        // ========================================
+        // 저장 / 불러오기
+        // ========================================
+        async function saveResults() {
+            if (scanData.sites.length === 0) {
+                alert('저장할 결과가 없습니다');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/save', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(`저장 완료!\n파일: ${data.filename}`);
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('저장 실패: ' + error.message);
+            }
+        }
+
+        async function loadResults(filename = null) {
+            try {
+                const response = await fetch('/api/load', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    scanData = data.results;
+                    state.selectedSites = scanData.sites.map(s => s.id);
+                    renderAll();
+                    
+                    if (data.saved_at) {
+                        document.getElementById('timestamp').textContent = 
+                            `Loaded from: ${new Date(data.saved_at).toLocaleString('ko-KR')}`;
+                    }
+                    
+                    // 히스토리 패널 닫기
+                    document.getElementById('historyPanel').style.display = 'none';
+                } else {
+                    if (filename) {
+                        alert(data.error);
+                    }
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+            }
+        }
+
+        let historyVisible = false;
+        let selectedHistoryFiles = [];  // 선택된 히스토리 파일들
+
+        async function toggleHistory() {
+            const panel = document.getElementById('historyPanel');
+            historyVisible = !historyVisible;
+
+            if (historyVisible) {
+                panel.style.display = 'block';
+                selectedHistoryFiles = [];
+                await loadHistory();
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        async function loadHistory() {
+            const listEl = document.getElementById('historyList');
+            listEl.innerHTML = '<div class="loading">로딩 중...</div>';
+
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+
+                if (data.history.length === 0) {
+                    listEl.innerHTML = '<div class="empty-history">저장된 히스토리가 없습니다</div>';
+                    return;
+                }
+
+                listEl.innerHTML = data.history.map(h => `
+                    <div class="history-item ${selectedHistoryFiles.includes(h.filename) ? 'selected' : ''}"
+                         onclick="toggleHistorySelection('${h.filename}')">
+                        <div class="history-checkbox">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-sites">${h.sites.slice(0, 2).join(', ')}${h.sites.length > 2 ? '...' : ''}</div>
+                            <div class="history-meta">
+                                ${new Date(h.saved_at).toLocaleString('ko-KR')} · ${h.results_count}개 항목
+                            </div>
+                        </div>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteHistory('${h.filename}')">🗑</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                listEl.innerHTML = '<div class="error">로드 실패</div>';
+            }
+        }
+
+        function toggleHistorySelection(filename) {
+            const idx = selectedHistoryFiles.indexOf(filename);
+            if (idx > -1) {
+                selectedHistoryFiles.splice(idx, 1);
+            } else {
+                selectedHistoryFiles.push(filename);
+            }
+            loadHistory();  // 선택 상태 반영하여 다시 렌더링
+        }
+
+        function clearHistorySelection() {
+            selectedHistoryFiles = [];
+            loadHistory();
+        }
+
+        async function loadSelectedHistory() {
+            if (selectedHistoryFiles.length === 0) {
+                alert('불러올 히스토리를 선택해주세요');
+                return;
+            }
+
+            try {
+                // 선택된 히스토리들을 병합
+                let mergedSites = [];
+                let mergedResults = [];
+                let siteIdOffset = 0;
+
+                for (const filename of selectedHistoryFiles) {
+                    const response = await fetch('/api/load', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ filename })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const results = data.results;
+
+                        // 사이트 ID 충돌 방지를 위해 오프셋 적용
+                        results.sites.forEach(site => {
+                            site.id = site.id + siteIdOffset;
+                            mergedSites.push(site);
+                        });
+
+                        results.results.forEach(result => {
+                            result.siteId = result.siteId + siteIdOffset;
+                            mergedResults.push(result);
+                        });
+
+                        siteIdOffset += results.sites.length;
+                    }
+                }
+
+                // 병합된 결과 적용
+                scanData = {
+                    sites: mergedSites,
+                    results: mergedResults
+                };
+                state.selectedSites = mergedSites.map(s => s.id);
+                renderAll();
+
+                // 히스토리 패널 닫기
+                document.getElementById('historyPanel').style.display = 'none';
+                historyVisible = false;
+                selectedHistoryFiles = [];
+
+            } catch (error) {
+                alert('불러오기 실패: ' + error.message);
+            }
+        }
+
+        async function loadAllHistory() {
+            // 전체 히스토리 불러오기
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+
+                if (data.history.length === 0) {
+                    alert('불러올 히스토리가 없습니다');
+                    return;
+                }
+
+                // 모든 파일 선택 후 불러오기
+                selectedHistoryFiles = data.history.map(h => h.filename);
+                await loadSelectedHistory();
+            } catch (error) {
+                alert('전체 불러오기 실패: ' + error.message);
+            }
+        }
+
+        async function deleteAllHistory() {
+            if (!confirm('모든 히스토리를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
+
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+
+                for (const h of data.history) {
+                    await fetch(`/api/history/${h.filename}`, { method: 'DELETE' });
+                }
+
+                await loadHistory();
+                alert('모든 히스토리가 삭제되었습니다');
+            } catch (error) {
+                alert('전체 삭제 실패: ' + error.message);
+            }
+        }
+
+        async function deleteHistory(filename) {
+            if (!confirm('이 히스토리를 삭제하시겠습니까?')) return;
+
+            try {
+                const response = await fetch(`/api/history/${filename}`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadHistory();
+                }
+            } catch (error) {
+                alert('삭제 실패');
+            }
+        }
+
+        async function exportMarkdown() {
+            if (scanData.sites.length === 0) {
+                alert('내보낼 결과가 없습니다');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/export/markdown', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Markdown 내용을 새 창에 표시
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(`
+                        <html>
+                        <head>
+                            <title>Site Scanner Report</title>
+                            <style>
+                                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                                       max-width: 900px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+                                pre { background: #f4f4f4; padding: 16px; border-radius: 8px; overflow-x: auto; }
+                                code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+                                table { border-collapse: collapse; width: 100%; }
+                                th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+                                th { background: #f4f4f4; }
+                                h1, h2, h3 { color: #333; }
+                                blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 16px; color: #666; }
+                            </style>
+                        </head>
+                        <body>
+                            <pre>${escapeHtml(data.content)}</pre>
+                            <hr>
+                            <p><a href="/api/export/download/${data.filename}" download>📥 파일 다운로드</a></p>
+                        </body>
+                        </html>
+                    `);
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('내보내기 실패: ' + error.message);
+            }
+        }
+
+        // ========================================
+        // 초기화
+        // ========================================
+
+        // 자동 로드 제거 - 사용자가 히스토리에서 직접 불러오기 해야 함
+        // loadResults();
+
+        renderAll();
+    </script>
+</body>
+</html>
