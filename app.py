@@ -497,4 +497,5 @@ if __name__ == '__main__':
     print("  http://localhost:5000")
     print("=" * 50)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # debug 필요한 경우, True 로 변경
+    app.run(debug=False, host='0.0.0.0', port=5000)

@@ -56,7 +56,7 @@ def scan_forms(soup, url, site_id, status_code):
             "method": method,
             "url": full_action,
             "status": status_code,
-            "details": inputs[:5]  # 최대 5개
+            "details": inputs  # 모든 input 태그 포함 (개수 제한 없음 26-01-31)
         })
 
     return results, len(forms)
@@ -74,7 +74,7 @@ def scan_inputs(soup, url, site_id, status_code):
 
     outside_inputs = [inp for inp in standalone_inputs if id(inp) not in form_inputs]
 
-    for inp in outside_inputs[:10]:  # 최대 10개
+    for inp in outside_inputs:  # 모든 input 태그 포함 (개수 제한 없음 26-01-31)
         results.append({
             "siteId": site_id,
             "type": "input",
@@ -132,7 +132,7 @@ def get_ajax_urls(script_content):
     """Script 태그 내에서 AJAX URL 및 메서드 추출"""
     ajax_list = []
 
-    # URL 추출 패턴
+    # URL 추출 패턴 (추가할 패턴이 있다면 여기에 작성 26-01-31)
     url_patterns = [
         r'url\s*:\s*["\']([^"\']+)["\']',           # url: "/api/data"
         r'\$\.ajax\s*\(\s*["\']([^"\']+)["\']',       # $.ajax("/api/data")
@@ -206,12 +206,6 @@ def scan_info(html_content, site_id):
                     "status": 200,
                     "details": [f"Type: {pattern_name}", f"Line: {line_num}"]
                 })
-
-                if info_count >= 20:  # 최대 20개
-                    break
-
-        if info_count >= 20:
-            break
 
     return results, info_count
 

@@ -1,9 +1,9 @@
 {
   "scan_options": {
-    "forms": true,
+    "forms": false,
     "inputs": true,
-    "scripts": true,
-    "info": true
+    "scripts": false,
+    "info": false
   },
   "display_options": {
     "dark_mode": true
