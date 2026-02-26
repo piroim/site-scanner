@@ -694,21 +694,22 @@
    /* ========================================
       Stats Grid
       ======================================== */
-   .stats-grid {
-       display: grid;
-       grid-template-columns: repeat(4, 1fr);
-       gap: 14px;
-       margin-bottom: 20px;
-   }
-   
-   .stat-card {
-       background: var(--bg-card);
-       border: 1px solid var(--border);
-       border-radius: 10px;
-       padding: 16px;
-       position: relative;
-       overflow: hidden;
-   }
+    .stats-grid {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        flex: 1 1 0;      /* 균등 분배 */
+        min-width: 0;      /* 오버플로우 방지 */
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+    }
    
    .stat-card::before {
        content: '';
@@ -723,6 +724,7 @@
    .stat-card.input::before { background: var(--accent-green); }
    .stat-card.script::before { background: var(--accent-amber); }
    .stat-card.info::before { background: var(--accent-blue); }
+   .stat-card.link::before { background: var(--accent-cyan); }
    
    .stat-label {
        font-size: 11px;
@@ -742,6 +744,7 @@
    .stat-card.input .stat-value { color: var(--accent-green); }
    .stat-card.script .stat-value { color: var(--accent-amber); }
    .stat-card.info .stat-value { color: var(--accent-blue); }
+   .stat-card.link .stat-value { color: var(--accent-cyan); }
    
    /* ========================================
       Filter Section
@@ -796,6 +799,7 @@
    .filter-tag.input.active { background: var(--accent-green); border-color: var(--accent-green); }
    .filter-tag.script.active { background: var(--accent-amber); border-color: var(--accent-amber); }
    .filter-tag.info.active { background: var(--accent-blue); border-color: var(--accent-blue); }
+   .filter-tag.link.active { background: var(--accent-cyan); border-color: var(--accent-cyan); }
    
    /* ========================================
       Search Box
@@ -911,6 +915,7 @@
    .type-badge.input { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
    .type-badge.script { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
    .type-badge.info { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+   .type-badge.link { background: rgba(34, 211, 238, 0.15); color: var(--accent-cyan); }
    
    .method-badge {
        font-family: 'JetBrains Mono', monospace;

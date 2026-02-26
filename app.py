@@ -40,7 +40,8 @@ DEFAULT_SETTINGS = {
         "forms": True,
         "inputs": True,
         "scripts": True,
-        "info": True
+        "info": True,
+        "links": True
     },
     "display_options": {
         "dark_mode": True

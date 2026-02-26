@@ -108,6 +108,17 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
+
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <span class="setting-name">Links</span>
+                            <span class="setting-desc">A href 태그 수집</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="optLinks" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>
@@ -197,6 +208,7 @@
                     document.getElementById('optInputs').checked = data.scan_options.inputs ?? true;
                     document.getElementById('optScripts').checked = data.scan_options.scripts ?? true;
                     document.getElementById('optInfo').checked = data.scan_options.info ?? true;
+                    document.getElementById('optLinks').checked = data.scan_options.links ?? true;
                 }
 
                 // 테마 설정 불러오기
@@ -234,7 +246,8 @@
                     forms: document.getElementById('optForms').checked,
                     inputs: document.getElementById('optInputs').checked,
                     scripts: document.getElementById('optScripts').checked,
-                    info: document.getElementById('optInfo').checked
+                    info: document.getElementById('optInfo').checked,
+                    links: document.getElementById('optLinks').checked
                 },
                 display_options: {
                     dark_mode: document.getElementById('optDarkMode').checked
@@ -266,6 +279,7 @@
             document.getElementById('optInputs').checked = true;
             document.getElementById('optScripts').checked = true;
             document.getElementById('optInfo').checked = true;
+            document.getElementById('optLinks').checked = true;
             document.getElementById('optDarkMode').checked = true;
             applyTheme(true);
 

@@ -131,6 +131,10 @@
                 <div class="stat-label">Information</div>
                 <div class="stat-value" id="infoCount">0</div>
             </div>
+            <div class="stat-card link">
+                <div class="stat-label">Links</div>
+                <div class="stat-value" id="linkCount">0</div>
+            </div>
         </div>
 
         <!-- Filter Section -->
@@ -142,6 +146,7 @@
                 <button class="filter-tag input" data-filter="input">Input</button>
                 <button class="filter-tag script" data-filter="script">Script</button>
                 <button class="filter-tag info" data-filter="info">Info</button>
+                <button class="filter-tag link" data-filter="link">Link</button>
             </div>
             <div class="search-box">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -401,12 +406,14 @@
             });
         }
 
+        // 메인 페이지에 스캔 결과 값 출력하는 위치 (count)
         function updateStats() {
             const relevant = scanData.results.filter(r => state.selectedSites.includes(r.siteId));
             document.getElementById('formCount').textContent = relevant.filter(r => r.type === 'form').length;
             document.getElementById('inputCount').textContent = relevant.filter(r => r.type === 'input').length;
             document.getElementById('scriptCount').textContent = relevant.filter(r => r.type === 'script').length;
             document.getElementById('infoCount').textContent = relevant.filter(r => r.type === 'info').length;
+            document.getElementById('linkCount').textContent = relevant.filter(r => r.type === 'link').length;
         }
 
         function renderResults() {

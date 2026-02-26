@@ -35,6 +35,7 @@ def get_headers_for_url(url):
 # 개별 스캔 함수
 # ========================================
 
+# Form 스캔 함수
 def scan_forms(soup, url, site_id, status_code):
     """Form 태그 스캔"""
     results = []
@@ -61,7 +62,7 @@ def scan_forms(soup, url, site_id, status_code):
 
     return results, len(forms)
 
-
+# Input 스캔 함수
 def scan_inputs(soup, url, site_id, status_code):
     """Form 외부 Input 태그 스캔"""
     results = []
@@ -86,6 +87,7 @@ def scan_inputs(soup, url, site_id, status_code):
 
     return results, len(outside_inputs)
 
+# Script 스캔 함수
 def scan_scripts(soup, url, site_id, status_code):
     """Script 태그 스캔 (외부 스크립트 + 인라인 AJAX URL 추출)"""
     results = []
@@ -174,6 +176,7 @@ def get_ajax_urls(script_content):
 
     return ajax_list
 
+# Information 스캔 함수
 def scan_info(html_content, site_id):
     """Information 패턴 스캔 (민감 정보 탐지)"""
     results = []
@@ -209,6 +212,31 @@ def scan_info(html_content, site_id):
 
     return results, info_count
 
+#a href 스캔 함수
+def scan_links(soup, url, site_id, status_code):
+    """A href 태그 스캔"""
+    results = []
+    links = soup.find_all('a', href=True)
+
+    for link in links:
+        href = link.get('href', '')
+        full_url = urljoin(url, href) if href else url
+        link_text = link.get_text(strip=True)
+
+        results.append({
+            "siteId": site_id,
+            "type": "link",
+            "method": "GET",
+            "url": full_url,
+            "status": status_code,
+            "details": {
+                "text": link_text,
+                "target": link.get('target', ''),
+                "rel": link.get('rel', []),
+                "original_href": href
+            }
+        })
+    return results, len(links)
 
 # ========================================
 # 메인 스캔 함수
@@ -240,7 +268,7 @@ def run_scan(urls, options, scan_status, scan_lock, add_log, save_callbacks=None
     opt_inputs = options.get('inputs', True)
     opt_scripts = options.get('scripts', True)
     opt_info = options.get('info', True)
-
+    opt_links = options.get('links', True)
     total_urls = len(urls)
 
     for idx, url in enumerate(urls, 1):
@@ -314,6 +342,14 @@ def run_scan(urls, options, scan_status, scan_lock, add_log, save_callbacks=None
                 with scan_lock:
                     scan_status["results"]["results"].extend(info_results)
 
+            # a href 스캔
+            if opt_links:
+                link_results, link_count = scan_links(soup, url, site_id, status_code)
+                if link_count > 0:
+                    add_log(f"a href 발견: {link_count}개")
+                with scan_lock:
+                    scan_status["results"]["results"].extend(link_results)
+                    
             # URL별 히스토리 저장
             if save_callbacks:
                 save_results_to_file, save_to_history = save_callbacks

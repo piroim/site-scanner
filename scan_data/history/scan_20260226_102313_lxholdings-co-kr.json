@@ -1,0 +1,2061 @@
+{
+  "saved_at": "2026-02-26T10:23:13.097780",
+  "results": {
+    "sites": [
+      {
+        "id": 1,
+        "url": "lxholdings.co.kr",
+        "lastScan": "2026-02-26 10:23"
+      }
+    ],
+    "results": [
+      {
+        "siteId": 1,
+        "type": "form",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/",
+        "status": 200,
+        "details": []
+      },
+      {
+        "siteId": 1,
+        "type": "form",
+        "method": "POST",
+        "url": "https://lxholdings.co.kr/",
+        "status": 200,
+        "details": []
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/lib/jquery-1.12.4.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/lib/slick-1.8.1/slick/slick.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/lib/slick-1.8.1/slick/slick.min.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/lib/TweenMax.min.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/ND.function.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/three.r119.min.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/vanta.dots.min.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/vanta.net.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/moment/moment.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/moment/locale/ko.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/common.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/lx.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/lxutil.js?v=02",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/menu.js",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "script",
+        "method": "-",
+        "url": "https://lxholdings.co.kr/resources/assets/javascript/main.js?v=1",
+        "status": 200,
+        "details": null
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/#container",
+        "status": 200,
+        "details": {
+          "text": "본문바로가기",
+          "target": "",
+          "rel": [],
+          "original_href": "#container"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/index.do",
+        "status": 200,
+        "details": {
+          "text": "LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/index.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "About LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "경영철학",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/conduct.do",
+        "status": 200,
+        "details": {
+          "text": "행동방식",
+          "target": "",
+          "rel": [],
+          "original_href": "/conduct.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/history.do",
+        "status": 200,
+        "details": {
+          "text": "연혁",
+          "target": "",
+          "rel": [],
+          "original_href": "/history.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_story.do",
+        "status": 200,
+        "details": {
+          "text": "CI 이야기",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_story.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_guideline.do",
+        "status": 200,
+        "details": {
+          "text": "CI 관리규정",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_guideline.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/global.do",
+        "status": 200,
+        "details": {
+          "text": "글로벌 네트워크",
+          "target": "",
+          "rel": [],
+          "original_href": "/global.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "자회사 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "LX인터내셔널",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/pantos.do",
+        "status": 200,
+        "details": {
+          "text": "LX판토스",
+          "target": "",
+          "rel": [],
+          "original_href": "/pantos.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/hausys.do",
+        "status": 200,
+        "details": {
+          "text": "LX하우시스",
+          "target": "",
+          "rel": [],
+          "original_href": "/hausys.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/semicon.do",
+        "status": 200,
+        "details": {
+          "text": "LX세미콘",
+          "target": "",
+          "rel": [],
+          "original_href": "/semicon.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mma.do",
+        "status": 200,
+        "details": {
+          "text": "LX MMA",
+          "target": "",
+          "rel": [],
+          "original_href": "/mma.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/glas.do",
+        "status": 200,
+        "details": {
+          "text": "LX글라스",
+          "target": "",
+          "rel": [],
+          "original_href": "/glas.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mdi.do",
+        "status": 200,
+        "details": {
+          "text": "LX MDI",
+          "target": "",
+          "rel": [],
+          "original_href": "/mdi.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ventures.do",
+        "status": 200,
+        "details": {
+          "text": "LX벤처스",
+          "target": "",
+          "rel": [],
+          "original_href": "/ventures.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "지속가능경영",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "Overview",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "ESG 경영체계",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/report.do",
+        "status": 200,
+        "details": {
+          "text": "리포트",
+          "target": "",
+          "rel": [],
+          "original_href": "/report.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "Activity",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "CSR 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "투자정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "경영정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "이사회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/audit.do",
+        "status": 200,
+        "details": {
+          "text": "감사위원회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/audit.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ir.do",
+        "status": 200,
+        "details": {
+          "text": "IR자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/ir.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/announce.do",
+        "status": 200,
+        "details": {
+          "text": "공시정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/announce.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/announce.do",
+        "status": 200,
+        "details": {
+          "text": "공시자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/announce.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/notice.do",
+        "status": 200,
+        "details": {
+          "text": "공고사항",
+          "target": "",
+          "rel": [],
+          "original_href": "/notice.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:irMail();",
+        "status": 200,
+        "details": {
+          "text": "IR문의",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:irMail();"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "MEDIA",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "PR Contents",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "광고",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/com.do",
+        "status": 200,
+        "details": {
+          "text": "기업영상",
+          "target": "",
+          "rel": [],
+          "original_href": "/com.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/news.do",
+        "status": 200,
+        "details": {
+          "text": "뉴스",
+          "target": "",
+          "rel": [],
+          "original_href": "/news.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://apply.lxcareers.com/main/Index.rpi",
+        "status": 200,
+        "details": {
+          "text": "채용",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//apply.lxcareers.com/main/Index.rpi"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/index.do",
+        "status": 200,
+        "details": {
+          "text": "KR",
+          "target": "",
+          "rel": [],
+          "original_href": "/index.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/en/index.do",
+        "status": 200,
+        "details": {
+          "text": "EN",
+          "target": "",
+          "rel": [],
+          "original_href": "/en/index.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "About LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "경영철학",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/conduct.do",
+        "status": 200,
+        "details": {
+          "text": "행동방식",
+          "target": "",
+          "rel": [],
+          "original_href": "/conduct.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/history.do",
+        "status": 200,
+        "details": {
+          "text": "연혁",
+          "target": "",
+          "rel": [],
+          "original_href": "/history.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_story.do",
+        "status": 200,
+        "details": {
+          "text": "CI 이야기",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_story.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_guideline.do",
+        "status": 200,
+        "details": {
+          "text": "CI 관리규정",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_guideline.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/global.do",
+        "status": 200,
+        "details": {
+          "text": "글로벌 네트워크",
+          "target": "",
+          "rel": [],
+          "original_href": "/global.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "자회사 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "LX인터내셔널",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/pantos.do",
+        "status": 200,
+        "details": {
+          "text": "LX판토스",
+          "target": "",
+          "rel": [],
+          "original_href": "/pantos.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/hausys.do",
+        "status": 200,
+        "details": {
+          "text": "LX하우시스",
+          "target": "",
+          "rel": [],
+          "original_href": "/hausys.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/semicon.do",
+        "status": 200,
+        "details": {
+          "text": "LX세미콘",
+          "target": "",
+          "rel": [],
+          "original_href": "/semicon.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mma.do",
+        "status": 200,
+        "details": {
+          "text": "LX MMA",
+          "target": "",
+          "rel": [],
+          "original_href": "/mma.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/glas.do",
+        "status": 200,
+        "details": {
+          "text": "LX글라스",
+          "target": "",
+          "rel": [],
+          "original_href": "/glas.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mdi.do",
+        "status": 200,
+        "details": {
+          "text": "LX MDI",
+          "target": "",
+          "rel": [],
+          "original_href": "/mdi.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ventures.do",
+        "status": 200,
+        "details": {
+          "text": "LX벤처스",
+          "target": "",
+          "rel": [],
+          "original_href": "/ventures.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "지속가능경영",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "Overview",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "ESG 경영체계",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/report.do",
+        "status": 200,
+        "details": {
+          "text": "리포트",
+          "target": "",
+          "rel": [],
+          "original_href": "/report.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "Activity",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "CSR 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "투자정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "경영정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "이사회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/audit.do",
+        "status": 200,
+        "details": {
+          "text": "감사위원회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/audit.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ir.do",
+        "status": 200,
+        "details": {
+          "text": "IR자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/ir.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/announce.do",
+        "status": 200,
+        "details": {
+          "text": "공시정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/announce.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/announce.do",
+        "status": 200,
+        "details": {
+          "text": "공시자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/announce.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/notice.do",
+        "status": 200,
+        "details": {
+          "text": "공고사항",
+          "target": "",
+          "rel": [],
+          "original_href": "/notice.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:irMail();",
+        "status": 200,
+        "details": {
+          "text": "IR문의",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:irMail();"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "MEDIA",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "PR Contents",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "광고",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/com.do",
+        "status": 200,
+        "details": {
+          "text": "기업영상",
+          "target": "",
+          "rel": [],
+          "original_href": "/com.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/news.do",
+        "status": 200,
+        "details": {
+          "text": "뉴스",
+          "target": "",
+          "rel": [],
+          "original_href": "/news.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://apply.lxcareers.com/main/Index.rpi",
+        "status": 200,
+        "details": {
+          "text": "채용",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//apply.lxcareers.com/main/Index.rpi"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "http://ethics.lxholdings.co.kr",
+        "status": 200,
+        "details": {
+          "text": "사이버 신문고",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "http://ethics.lxholdings.co.kr"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/contact.do",
+        "status": 200,
+        "details": {
+          "text": "고객문의",
+          "target": "",
+          "rel": [],
+          "original_href": "/contact.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "LX",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "About LX",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/philosophy.do",
+        "status": 200,
+        "details": {
+          "text": "경영철학",
+          "target": "",
+          "rel": [],
+          "original_href": "/philosophy.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/conduct.do",
+        "status": 200,
+        "details": {
+          "text": "행동방식",
+          "target": "",
+          "rel": [],
+          "original_href": "/conduct.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/history.do",
+        "status": 200,
+        "details": {
+          "text": "연혁",
+          "target": "",
+          "rel": [],
+          "original_href": "/history.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_about.do",
+        "status": 200,
+        "details": {
+          "text": "CI 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_about.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_story.do",
+        "status": 200,
+        "details": {
+          "text": "CI 이야기",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_story.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ci_guideline.do",
+        "status": 200,
+        "details": {
+          "text": "CI 관리규정",
+          "target": "",
+          "rel": [],
+          "original_href": "/ci_guideline.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/global.do",
+        "status": 200,
+        "details": {
+          "text": "글로벌 네트워크",
+          "target": "",
+          "rel": [],
+          "original_href": "/global.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "자회사 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "LX인터내셔널",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/pantos.do",
+        "status": 200,
+        "details": {
+          "text": "LX판토스",
+          "target": "",
+          "rel": [],
+          "original_href": "/pantos.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/hausys.do",
+        "status": 200,
+        "details": {
+          "text": "LX하우시스",
+          "target": "",
+          "rel": [],
+          "original_href": "/hausys.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/semicon.do",
+        "status": 200,
+        "details": {
+          "text": "LX세미콘",
+          "target": "",
+          "rel": [],
+          "original_href": "/semicon.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mma.do",
+        "status": 200,
+        "details": {
+          "text": "LX MMA",
+          "target": "",
+          "rel": [],
+          "original_href": "/mma.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/glas.do",
+        "status": 200,
+        "details": {
+          "text": "LX글라스",
+          "target": "",
+          "rel": [],
+          "original_href": "/glas.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mdi.do",
+        "status": 200,
+        "details": {
+          "text": "LX MDI",
+          "target": "",
+          "rel": [],
+          "original_href": "/mdi.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ventures.do",
+        "status": 200,
+        "details": {
+          "text": "LX벤처스",
+          "target": "",
+          "rel": [],
+          "original_href": "/ventures.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "지속가능경영",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "Overview",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/esg-management.do",
+        "status": 200,
+        "details": {
+          "text": "ESG 경영체계",
+          "target": "",
+          "rel": [],
+          "original_href": "/esg-management.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/report.do",
+        "status": 200,
+        "details": {
+          "text": "리포트",
+          "target": "",
+          "rel": [],
+          "original_href": "/report.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "Activity",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "CSR 소개",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "투자정보",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "경영정보",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/director.do",
+        "status": 200,
+        "details": {
+          "text": "이사회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/director.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/audit.do",
+        "status": 200,
+        "details": {
+          "text": "감사위원회 구성현황",
+          "target": "",
+          "rel": [],
+          "original_href": "/audit.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ir.do",
+        "status": 200,
+        "details": {
+          "text": "IR자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/ir.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "공시정보",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/announce.do",
+        "status": 200,
+        "details": {
+          "text": "공시자료",
+          "target": "",
+          "rel": [],
+          "original_href": "/announce.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/notice.do",
+        "status": 200,
+        "details": {
+          "text": "공고사항",
+          "target": "",
+          "rel": [],
+          "original_href": "/notice.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:irMail();",
+        "status": 200,
+        "details": {
+          "text": "IR문의",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:irMail();"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "javascript:;",
+        "status": 200,
+        "details": {
+          "text": "MEDIA",
+          "target": "",
+          "rel": [],
+          "original_href": "javascript:;"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "PR Contents",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ad.do?ad_type=video",
+        "status": 200,
+        "details": {
+          "text": "광고",
+          "target": "",
+          "rel": [],
+          "original_href": "/ad.do?ad_type=video"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/com.do",
+        "status": 200,
+        "details": {
+          "text": "기업영상",
+          "target": "",
+          "rel": [],
+          "original_href": "/com.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/news.do",
+        "status": 200,
+        "details": {
+          "text": "뉴스",
+          "target": "",
+          "rel": [],
+          "original_href": "/news.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://apply.lxcareers.com/main/Index.rpi",
+        "status": 200,
+        "details": {
+          "text": "채용",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//apply.lxcareers.com/main/Index.rpi"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/international.do",
+        "status": 200,
+        "details": {
+          "text": "LX인터내셔널자원개발, Trading, 그린/신성장",
+          "target": "",
+          "rel": [],
+          "original_href": "/international.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/pantos.do",
+        "status": 200,
+        "details": {
+          "text": "LX판토스종합 물류",
+          "target": "",
+          "rel": [],
+          "original_href": "/pantos.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/hausys.do",
+        "status": 200,
+        "details": {
+          "text": "LX하우시스건축장식자재, 자동차소재, 산업용 필름",
+          "target": "",
+          "rel": [],
+          "original_href": "/hausys.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/semicon.do",
+        "status": 200,
+        "details": {
+          "text": "LX세미콘시스템 반도체 설계",
+          "target": "",
+          "rel": [],
+          "original_href": "/semicon.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mma.do",
+        "status": 200,
+        "details": {
+          "text": "LX MMAMMA, PMMA",
+          "target": "",
+          "rel": [],
+          "original_href": "/mma.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/glas.do",
+        "status": 200,
+        "details": {
+          "text": "LX글라스건축용 판유리, 코팅유리, 가공 및 특수유리",
+          "target": "",
+          "rel": [],
+          "original_href": "/glas.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/ventures.do",
+        "status": 200,
+        "details": {
+          "text": "LX벤처스AI & Digital, Hardware & Materials, Future Mobility, Sustainable Economy",
+          "target": "",
+          "rel": [],
+          "original_href": "/ventures.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/mdi.do",
+        "status": 200,
+        "details": {
+          "text": "LX MDI경영컨설팅, Market Intelligence, IT·업무 인프라 혁신, 인재 육성",
+          "target": "",
+          "rel": [],
+          "original_href": "/mdi.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/report.do",
+        "status": 200,
+        "details": {
+          "text": "지속가능경영보고서신뢰받는 기업으로서 지속 가능한 미래를 준비하기 위해다양한 활동을 추진하고 있습니다지속가능경영체계를 정립하여다양한 노력을 기울이고 있습니다.",
+          "target": "",
+          "rel": [],
+          "original_href": "/report.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/global.do",
+        "status": 200,
+        "details": {
+          "text": "글로벌 네트워크전 세계의 풍부한 네트워크를 기반으로글로벌 시장에서 신속하고 유연한 서비스를 제공합니다전 세계에 광범위한 네트워크를보유하고 있습니다",
+          "target": "",
+          "rel": [],
+          "original_href": "/global.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/csr.do?csr_type=domestic",
+        "status": 200,
+        "details": {
+          "text": "CSR 소개기업의 핵심역량과 연계한 다양한 사회공헌활동을 펼치며, '함께하는 삶'을 목표로 기업의 사회적 책임을 다하고 있습니다기업과 핵심역량을 연계한다양한 사회공헌활동을 진행합니다",
+          "target": "",
+          "rel": [],
+          "original_href": "/csr.do?csr_type=domestic"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/news.do",
+        "status": 200,
+        "details": {
+          "text": "MEDIA최신 뉴스와 홍보자료를만나보세요최신 뉴스와 홍보자료를만나보세요",
+          "target": "",
+          "rel": [],
+          "original_href": "/news.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "http://ethics.lxholdings.co.kr",
+        "status": 200,
+        "details": {
+          "text": "사이버 신문고",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "http://ethics.lxholdings.co.kr"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://lxholdings.co.kr/contact.do",
+        "status": 200,
+        "details": {
+          "text": "고객문의",
+          "target": "",
+          "rel": [],
+          "original_href": "/contact.do"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxinternational.com/",
+        "status": 200,
+        "details": {
+          "text": "LX인터내셔널",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxinternational.com/"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxpantos.com/",
+        "status": 200,
+        "details": {
+          "text": "LX판토스",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxpantos.com/"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxhausys.co.kr",
+        "status": 200,
+        "details": {
+          "text": "LX하우시스",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxhausys.co.kr"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxsemicon.com",
+        "status": 200,
+        "details": {
+          "text": "LX세미콘",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxsemicon.com"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxmma.com",
+        "status": 200,
+        "details": {
+          "text": "LX MMA",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxmma.com"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxglas.co.kr",
+        "status": 200,
+        "details": {
+          "text": "LX글라스",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxglas.co.kr"
+        }
+      },
+      {
+        "siteId": 1,
+        "type": "link",
+        "method": "GET",
+        "url": "https://www.lxventures.vc",
+        "status": 200,
+        "details": {
+          "text": "LX벤처스",
+          "target": "_blank",
+          "rel": [],
+          "original_href": "//www.lxventures.vc"
+        }
+      }
+    ]
+  }
+}

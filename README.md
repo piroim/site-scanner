@@ -15,7 +15,7 @@ site-scanner/
 ├── scanner/                    # 스캔 로직 모듈
 │   ├── __init__.py
 │   ├── config.py               # 헤더/세션 설정 (사이트별 쿠키 등)
-│   └── run_scan.py             # 스캔 함수 (forms, inputs, scripts, info)
+│   └── run_scan.py             # 스캔 함수 (forms, inputs, scripts, info, a href)
 │
 ├── module/                     # 공통 모듈
 │   ├── headers_module.py       # HTTP 헤더 정의 및 파싱
@@ -67,6 +67,7 @@ http://localhost:5000
 | **Input 추출** | 독립적인 input 필드 수집 |
 | **Script 추출** | 외부 스크립트 및 인라인 AJAX URL 추출 |
 | **Info 추출** | API Key, Password, Token 등 민감 정보 탐지 |
+| **a href 추출** | a href 경로 수집 |
 | **실시간 진행률** | 스캔 진행 상황 실시간 표시 |
 | **필터링** | 타입별, 사이트별, 검색어 필터링 |
 | **히스토리** | URL별 스캔 결과 자동 저장 및 불러오기 |
@@ -136,7 +137,6 @@ https://demo.org
 ## ⚠️ 주의사항
 
 - **허가된 대상**에만 사용하세요.
-- 과도한 요청은 서버에 부하를 줄 수 있습니다.
 
 ## 📋 변경 이력
 
