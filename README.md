@@ -43,7 +43,8 @@ site-scanner/
 ### 1. 필요 패키지 설치
 
 ```bash
-pip install flask requests beautifulsoup4
+pip install flask requests beautifulsoup4 playwright
+playwright install chromium
 ```
 
 ### 2. 서버 실행

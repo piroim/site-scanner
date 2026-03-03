@@ -3,6 +3,7 @@
 ## 📅 Release & Update Summary
 | Version | Date | Status | Key Changes | Next Steps |
 | :--- | :--- | :--- | :--- | :--- |
+| `v1.3.0` | 2026.03.03 | ✅ 완료 | `playwright` 구조로 변경 | requests 모듈 제거
 | `v1.2.0` | 2026.02.26 | ✅ 완료 | 대시보드 수정, a href 태그 수집 기능 추가 | 기능 추가
 | `v1.1.0` | 2026.01.31 | ✅ 완료 | 수집 데이터 개수 제한 코드 삭제/수정 | 수집 패턴 확장
 | `v1.0.0` | 2026.01.25 | ✅ 완료 | **정식 릴리스**: 스캔 기능 구현 및 모듈화 완료 | - |
@@ -14,6 +15,23 @@
 ---
 
 ## 📜 Detailed Change Logs
+
+<details>
+<summary><b>[2026.03.03] v1.3.0 : 파싱 방식 변경</b></summary>
+
+### 📋 수정사항 
+- `reqeusts` 에서 `playwright` 기반으로 정보를 추출하는 방식 변경
+    - `run_scan.py`, `app.py` 코드만 일부 수정
+
+### 🔧 진행예정
+- none
+
+### 🆙 기능 업데이트 
+- `playwright`를 사용한 동적 파싱 구현
+
+### 💡 메모
+- none
+</details>
 
 <details>
 <summary><b>[2026.02.26] v1.2.0 : 기능 추가</b></summary>

@@ -6,10 +6,10 @@
 
 import re
 import time
-import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 from .config import DEFAULT_HEADERS, SITE_SESSIONS, REQUEST_CONFIG
 
 
@@ -292,16 +292,33 @@ def run_scan(urls, options, scan_status, scan_lock, add_log, save_callbacks=None
             })
 
         try:
-            # HTTP 요청 (사이트별 세션 적용)
+            # Playwright로 렌더링 후 DOM 수집
             headers = get_headers_for_url(url)
-            response = requests.get(
-                url,
-                headers=headers,
-                timeout=REQUEST_CONFIG["timeout"],
-                verify=REQUEST_CONFIG["verify_ssl"]
-            )
-            status_code = response.status_code
-            html_content = response.text
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                context = browser.new_context(extra_http_headers=headers)
+                page = context.new_page()
+
+                # 네트워크 응답에서 status_code 캡처
+                status_code = 0
+                def on_response(res):
+                    nonlocal status_code
+                    if res.url == url or res.url == url.rstrip('/') + '/':
+                        status_code = res.status
+
+                page.on("response", on_response)
+
+                page.goto(
+                    url,
+                    timeout=REQUEST_CONFIG["timeout"] * 1000,  # ms 단위
+                    wait_until="networkidle"
+                )
+
+                html_content = page.content()
+                browser.close()
+
+            if status_code == 0:
+                status_code = 200  # goto 성공 시 기본값
 
             add_log(f"응답: {status_code}")
 
@@ -363,10 +380,8 @@ def run_scan(urls, options, scan_status, scan_lock, add_log, save_callbacks=None
                 save_to_history(url_result)
                 add_log(f"히스토리 저장: {site_data['url']}")
 
-        except requests.exceptions.Timeout:
+        except PlaywrightTimeout:
             add_log(f"타임아웃: {url}")
-        except requests.exceptions.RequestException as e:
-            add_log(f"요청 실패: {str(e)[:50]}")
         except Exception as e:
             add_log(f"오류: {str(e)[:50]}")
 
