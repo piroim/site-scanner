@@ -6,14 +6,20 @@ Site Scanner - Flask Web Server
 접속: http://localhost:5000
 """
 
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for
 from datetime import datetime
 from pathlib import Path
 from scanner import run_scan
 import threading
 import json
 import os
+import re
 import logging
+from scanner.access_list import (
+    delete_history_files_for_site_label,
+    export_access_list_from_history_dir,
+    load_access_record,
+)
 
 logging.basicConfig(
     filename='flask_debug.log', 
@@ -32,6 +38,24 @@ DATA_DIR.mkdir(exist_ok=True)
 RESULTS_FILE = DATA_DIR / "scan_results.json"
 HISTORY_DIR = DATA_DIR / "history"
 HISTORY_DIR.mkdir(exist_ok=True)
+# scan_data/access_list (구 vuln_access 디렉터리는 최초 기동 시 이름 변경·병합)
+_legacy_access_dir = DATA_DIR / "vuln_access"
+ACCESS_LIST_DIR = DATA_DIR / "access_list"
+if _legacy_access_dir.is_dir():
+    if not ACCESS_LIST_DIR.exists():
+        _legacy_access_dir.rename(ACCESS_LIST_DIR)
+    else:
+        ACCESS_LIST_DIR.mkdir(parents=True, exist_ok=True)
+        for _p in _legacy_access_dir.glob("*.json"):
+            _dest = ACCESS_LIST_DIR / _p.name
+            if not _dest.exists():
+                _p.rename(_dest)
+        try:
+            _legacy_access_dir.rmdir()
+        except OSError:
+            pass
+else:
+    ACCESS_LIST_DIR.mkdir(parents=True, exist_ok=True)
 SETTINGS_FILE = DATA_DIR / "settings.json"
 
 # 기본 설정값
@@ -100,6 +124,13 @@ def load_results_from_file(filename=None):
     except Exception as e:
         print(f"파일 로드 오류: {e}")
         return None
+
+
+def has_history_scan_files():
+    """히스토리 JSON이 하나라도 있으면 True (List UI 활성화용)."""
+    if not HISTORY_DIR.is_dir():
+        return False
+    return any(HISTORY_DIR.glob("scan_*.json"))
 
 
 def save_to_history(results):
@@ -289,6 +320,115 @@ def index():
     return render_template('dashboard.html')
 
 
+def _safe_access_list_filename(name: str) -> bool:
+    """access_list JSON 파일명만 허용 (경로 조작 방지)."""
+    if not name or name != os.path.basename(name) or ".." in name:
+        return False
+    return bool(re.match(r"^[A-Za-z0-9._-]+\.json$", name))
+
+
+@app.route('/list')
+def list_page():
+    """엔드포인트 목록: 사이트별 저장 데이터를 사이드바에서 선택해 표시."""
+    has_history = has_history_scan_files()
+    return render_template('list.html', has_history_file=has_history)
+
+
+@app.route('/vuln')
+def vuln_legacy_redirect():
+    """기존 /vuln 경로는 /list로 이동."""
+    return redirect(url_for('list_page'), code=301)
+
+
+@app.route('/api/access_list/list')
+@app.route('/api/vuln/access/list')  # 하위 호환
+def access_list_items():
+    """access_list 디렉터리에 저장된 JSON 목록 (최신 수정 순)."""
+    items = []
+    for p in sorted(
+        ACCESS_LIST_DIR.glob("*.json"),
+        key=lambda x: x.stat().st_mtime,
+        reverse=True,
+    ):
+        data = load_access_record(p)
+        if not data:
+            continue
+        items.append(
+            {
+                "filename": p.name,
+                "site_label": data.get("site_label", p.stem),
+                "updated_at": data.get("updated_at", ""),
+            }
+        )
+    return jsonify({"items": items})
+
+
+@app.route('/api/access_list/file/<filename>')
+@app.route('/api/vuln/access/file/<filename>')  # 하위 호환
+def access_list_get_file(filename):
+    """저장된 접근 테스트 레코드 한 건."""
+    if not _safe_access_list_filename(filename):
+        return jsonify({"error": "잘못된 파일명입니다"}), 400
+    path = ACCESS_LIST_DIR / filename
+    if not path.is_file():
+        return jsonify({"error": "파일을 찾을 수 없습니다"}), 404
+    data = load_access_record(path)
+    if data is None:
+        return jsonify({"error": "파일을 읽을 수 없습니다"}), 500
+    return jsonify(data)
+
+
+@app.route('/api/access_list/file/<filename>', methods=['DELETE'])
+@app.route('/api/vuln/access/file/<filename>', methods=['DELETE'])  # 하위 호환
+def access_list_delete_file(filename):
+    """저장된 access_list JSON 삭제. 동일 사이트가 포함된 히스토리(scan_*.json)도 함께 삭제."""
+    if not _safe_access_list_filename(filename):
+        return jsonify({"error": "잘못된 파일명입니다"}), 400
+    path = ACCESS_LIST_DIR / filename
+    if not path.is_file():
+        return jsonify({"error": "파일을 찾을 수 없습니다"}), 404
+    record = load_access_record(path)
+    site_label = (record or {}).get("site_label") or ""
+    try:
+        path.unlink()
+        logging.info("access_list 삭제: %s", filename)
+    except OSError as e:
+        logging.error("access_list 삭제 실패: %s", e)
+        return jsonify({"error": str(e)}), 500
+    history_deleted: list[str] = []
+    if site_label:
+        history_deleted = delete_history_files_for_site_label(site_label, HISTORY_DIR)
+        if history_deleted:
+            logging.info(
+                "access_list 삭제에 따른 히스토리 삭제: site=%s files=%s",
+                site_label,
+                history_deleted,
+            )
+    return jsonify({"ok": True, "history_deleted": history_deleted})
+
+
+@app.route('/api/access_list/run', methods=['POST'])
+@app.route('/api/vuln/access/run', methods=['POST'])  # 하위 호환
+def access_list_run():
+    """
+    scan_data/history/scan_*.json 전부를 병합한 뒤 사이트(URL)별로 access_list에 저장.
+    scan_results.json이 아닌 히스토리를 기준으로 하여, 다수 스냅샷·삭제 후에도 싱크가 맞도록 한다.
+    """
+    if not has_history_scan_files():
+        return jsonify(
+            {
+                "error": "히스토리가 없거나 읽을 수 없습니다. 대시보드에서 스캔하거나 히스토리를 불러오세요."
+            }
+        ), 400
+    try:
+        summaries = export_access_list_from_history_dir(HISTORY_DIR, ACCESS_LIST_DIR)
+    except Exception as e:
+        logging.exception("access_list 내보내기 오류")
+        return jsonify({"error": str(e)}), 500
+    logging.info("access_list 저장 완료: %s개 사이트", len(summaries))
+    return jsonify({"ok": True, "summaries": summaries})
+
+
 @app.route('/api/scan', methods=['POST'])
 def start_scan():
     """스캔 시작 API"""
@@ -378,31 +518,46 @@ def save_results():
 def load_results():
     """저장된 결과 불러오기"""
     global scan_status
-    
-    data = request.json
-    filename = data.get('filename')
-    
+
+    data = request.get_json(silent=True) or {}
+    filename = data.get("filename")
+
     if filename:
-        # 특정 히스토리 파일 로드
-        filepath = HISTORY_DIR / filename
+        safe_name = os.path.basename(str(filename).strip())
+        if not safe_name or safe_name in (".", ".."):
+            return jsonify({"error": "잘못된 파일명입니다"}), 400
+        history_root = HISTORY_DIR.resolve()
+        try:
+            filepath = (history_root / safe_name).resolve()
+            filepath.relative_to(history_root)
+        except ValueError:
+            return jsonify({"error": "허용되지 않은 경로입니다"}), 400
+        except OSError:
+            return jsonify({"error": "경로를 확인할 수 없습니다"}), 400
     else:
-        # 최근 저장된 결과 로드
         filepath = RESULTS_FILE
-    
+
     loaded = load_results_from_file(filepath)
-    
+
     if loaded is None:
         return jsonify({"error": "저장된 결과가 없습니다"}), 404
-    
-    with scan_lock:
-        scan_status["results"] = loaded.get("results", {"sites": [], "results": []})
-        add_log(f"결과 로드 완료: {filepath.name if hasattr(filepath, 'name') else 'scan_results.json'}")
-    
-    return jsonify({
-        "message": "로드 완료",
-        "saved_at": loaded.get("saved_at"),
-        "results": scan_status["results"]
-    })
+
+    try:
+        with scan_lock:
+            scan_status["results"] = loaded.get("results", {"sites": [], "results": []})
+            fp_name = getattr(filepath, "name", None) or "scan_results.json"
+            add_log(f"결과 로드 완료: {fp_name}")
+    except Exception as e:
+        logging.exception("결과 로드 적용 오류")
+        return jsonify({"error": f"로드 처리 중 오류: {e}"}), 500
+
+    return jsonify(
+        {
+            "message": "로드 완료",
+            "saved_at": loaded.get("saved_at"),
+            "results": scan_status["results"],
+        }
+    )
 
 
 @app.route('/api/history')

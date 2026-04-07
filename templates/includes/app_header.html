@@ -1,0 +1,14 @@
+{# nav_active: 'dashboard' | 'list' | 'settings' #}
+<header class="app-header" role="banner">
+    <div class="app-header-brand">
+        <a href="{{ url_for('index') }}" class="app-header-logo" title="대시보드">
+            <div class="logo-icon" aria-hidden="true">🔍</div>
+            <span>Site Scanner</span>
+        </a>
+    </div>
+    <nav class="app-header-nav" aria-label="주요 화면 이동">
+        <a href="{{ url_for('index') }}" class="app-header-link{% if nav_active == 'dashboard' %} active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('list_page') }}" class="app-header-link{% if nav_active == 'list' %} active{% endif %}">List</a>
+        <a href="{{ url_for('settings_page') }}" class="app-header-link{% if nav_active == 'settings' %} active{% endif %}">Settings</a>
+    </nav>
+</header>

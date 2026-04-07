@@ -9,6 +9,8 @@
       CSS Variables - Dark Mode (Default)
       ======================================== */
    :root {
+       --font-sans: 'Noto Sans', 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+       --font-mono: 'JetBrains Mono', monospace;
        --bg-dark: #0a0e17;
        --bg-card: #111827;
        --bg-sidebar: #0d1321;
@@ -23,6 +25,7 @@
        --text-muted: #64748b;
        --border: #1e293b;
        --glow-cyan: rgba(34, 211, 238, 0.15);
+       --app-header-height: 52px;
    }
 
    /* ========================================
@@ -55,11 +58,85 @@
    }
    
    body {
-       font-family: 'Noto Sans', 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+       font-family: var(--font-sans);
        background: var(--bg-dark);
        color: var(--text-primary);
        min-height: 100vh;
        display: flex;
+   }
+
+   /* ========================================
+      Global top header (Dashboard / Vuln / Settings)
+      ======================================== */
+   .app-header {
+       position: fixed;
+       top: 0;
+       left: 0;
+       right: 0;
+       height: var(--app-header-height);
+       z-index: 200;
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       padding: 0 20px 0 24px;
+       background: var(--bg-sidebar);
+       border-bottom: 1px solid var(--border);
+   }
+
+   .app-header-brand {
+       display: flex;
+       align-items: center;
+   }
+
+   .app-header-logo {
+       display: flex;
+       align-items: center;
+       gap: 10px;
+       font-family: var(--font-mono);
+       font-weight: 700;
+       font-size: 15px;
+       color: var(--accent-cyan);
+       text-decoration: none;
+       letter-spacing: -0.02em;
+   }
+
+   .app-header-logo:hover {
+       color: var(--text-primary);
+   }
+
+   .app-header-logo .logo-icon {
+       flex-shrink: 0;
+   }
+
+   .app-header-nav {
+       display: flex;
+       align-items: center;
+       gap: 2px;
+   }
+
+   .app-header-link {
+       display: inline-block;
+       padding: 8px 16px;
+       border-radius: 8px;
+       font-size: 13px;
+       font-weight: 600;
+       color: var(--text-secondary);
+       text-decoration: none;
+       transition: background 0.15s ease, color 0.15s ease;
+   }
+
+   .app-header-link:hover {
+       color: var(--text-primary);
+       background: rgba(255, 255, 255, 0.06);
+   }
+
+   [data-theme="light"] .app-header-link:hover {
+       background: rgba(15, 23, 42, 0.06);
+   }
+
+   .app-header-link.active {
+       color: var(--accent-cyan);
+       background: rgba(34, 211, 238, 0.12);
    }
    
    /* ========================================
@@ -72,7 +149,8 @@
        display: flex;
        flex-direction: column;
        position: fixed;
-       height: 100vh;
+       top: var(--app-header-height);
+       height: calc(100vh - var(--app-header-height));
        z-index: 100;
        overflow-y: auto;
    }
@@ -86,7 +164,7 @@
        display: flex;
        align-items: center;
        gap: 10px;
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-weight: 700;
        font-size: 16px;
        color: var(--accent-cyan);
@@ -130,7 +208,7 @@
        border-radius: 8px;
        padding: 12px;
        color: var(--text-primary);
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 12px;
        resize: vertical;
        outline: none;
@@ -216,7 +294,7 @@
        padding: 10px 16px;
        border: none;
        border-radius: 6px;
-       font-family: 'Noto Sans KR', sans-serif;
+       font-family: var(--font-sans);
        font-size: 12px;
        font-weight: 600;
        cursor: pointer;
@@ -295,13 +373,13 @@
    
    #progressPercent {
        color: var(--accent-cyan);
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-weight: 600;
    }
    
    .current-url {
        color: var(--text-muted);
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        max-width: 180px;
        overflow: hidden;
        text-overflow: ellipsis;
@@ -327,7 +405,7 @@
    }
    
    .site-count {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        color: var(--accent-cyan);
        background: var(--glow-cyan);
@@ -404,7 +482,7 @@
    }
    
    .site-url {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 11px;
        color: var(--text-primary);
        white-space: nowrap;
@@ -486,7 +564,7 @@
        background: var(--bg-dark);
        border-radius: 6px;
        padding: 8px;
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
    }
    
@@ -639,7 +717,7 @@
    }
    
    .history-sites {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 11px;
        color: var(--text-primary);
        white-space: nowrap;
@@ -688,6 +766,8 @@
    .main-content {
        flex: 1;
        margin-left: 320px;
+       margin-top: var(--app-header-height);
+       min-height: calc(100vh - var(--app-header-height));
        padding: 20px 28px;
    }
    
@@ -735,7 +815,7 @@
    }
    
    .stat-value {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 28px;
        font-weight: 700;
    }
@@ -773,7 +853,7 @@
    }
    
    .filter-tag {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 11px;
        padding: 6px 14px;
        border-radius: 5px;
@@ -859,7 +939,7 @@
    }
    
    .results-count {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 11px;
        color: var(--text-muted);
    }
@@ -903,7 +983,7 @@
       Badges
       ======================================== */
    .type-badge {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        font-weight: 600;
        padding: 3px 8px;
@@ -918,7 +998,7 @@
    .type-badge.link { background: rgba(34, 211, 238, 0.15); color: var(--accent-cyan); }
    
    .method-badge {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        font-weight: 600;
        padding: 3px 8px;
@@ -929,7 +1009,7 @@
    .method-badge.get { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
    
    .status-badge {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        font-weight: 600;
        padding: 3px 8px;
@@ -943,7 +1023,7 @@
       Cell Styles
       ======================================== */
    .url-cell {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        color: var(--text-secondary);
        word-break: break-all;
        font-size: 11px;
@@ -955,7 +1035,7 @@
    
    .detail-tag {
        display: inline-block;
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        background: var(--bg-dark);
        padding: 3px 6px;
@@ -971,7 +1051,7 @@
    }
    
    .sub-item {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 10px;
        color: var(--text-muted);
        padding: 4px 0;
@@ -1061,6 +1141,15 @@
 
        .main-content {
            margin-left: 280px;
+       }
+
+       .app-header {
+           padding: 0 12px 0 16px;
+       }
+
+       .app-header-link {
+           padding: 8px 12px;
+           font-size: 12px;
        }
    }
 
@@ -1286,7 +1375,7 @@
    }
 
    .code-preview code {
-       font-family: 'JetBrains Mono', monospace;
+       font-family: var(--font-mono);
        font-size: 12px;
        color: var(--accent-cyan);
        line-height: 1.6;

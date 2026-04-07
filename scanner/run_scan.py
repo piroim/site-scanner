@@ -189,6 +189,7 @@ def scan_info(html_content, site_id):
         'EMAIL': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
         'IP_ADDRESS': r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',
         'AWS_KEY': r'AKIA[0-9A-Z]{16}',
+        'JWT_TOKEN': r'ey[a-zA-Z0-9_-]{24,}'
     }
 
     lines = html_content.split('\n')

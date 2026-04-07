@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List - Site Scanner</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-has-history="{{ 'true' if has_history_file else 'false' }}">
+    {% set nav_active = 'list' %}
+    {% include 'includes/app_header.html' %}
+    <aside class="sidebar vuln-sidebar">
+        <div class="vuln-sidebar-actions">
+            <button type="button" id="btnVulnRun" class="btn btn-primary vuln-run-btn" {% if not has_history_file %}disabled title="히스토리 필요"{% endif %}>
+                다시 동기화
+            </button>
+            <!-- <p class="vuln-sidebar-hint">
+                페이지를 열면 <code>scan_data/history/</code>의 <code>scan_*.json</code>을
+                <strong>전부 병합</strong>한 뒤 <code>scan_data/access_list/</code>에 자동 반영합니다.<br>
+                run_list 규칙으로 GET/POST/LINK/JS 구역만 묶으며 HTTP 재요청은 없습니다. 수동으로 최신 히스토리와 맞출 때만 위 버튼을 누르세요.
+            </p> -->
+        </div>
+        <div class="vuln-site-list-header">
+            <span>저장된 URL (사이트)</span>
+            <button type="button" id="btnVulnRefresh" class="btn-clear vuln-refresh" title="목록 새로고침">↻</button>
+        </div>
+        <div id="vulnSiteList" class="vuln-site-list">
+            <div class="vuln-site-empty" id="vulnSiteEmpty">동기화 중이거나 저장된 사이트가 없습니다. 히스토리(scan_*.json)가 있으면 자동으로 채워집니다.</div>
+        </div>
+    </aside>
+
+    <main class="main-content settings-content vuln-main">
+        <div class="settings-header">
+            <h1>API LIST</h1>
+            <p class="settings-desc" id="vulnMainSubtitle">왼쪽에서 사이트를 선택하면 스캔에서 식별된 URL이 구역별로 표시됩니다.</p>
+        </div>
+
+        <div id="vulnMainPlaceholder" class="vuln-placeholder">
+            <p>왼쪽 목록에서 사이트를 선택하세요.</p>
+        </div>
+
+        <div id="vulnMainContent" class="vuln-main-content" style="display: none;">
+            <p class="vuln-meta" id="vulnMeta"></p>
+            <div class="vuln-zones" id="vulnZones"></div>
+            <p class="vuln-total" id="vulnTotal"></p>
+        </div>
+    </main>
+
+    <template id="tplVulnZone">
+        <section class="vuln-zone">
+            <div class="vuln-zone-head">
+                <h2 class="vuln-zone-title"></h2>
+                <span class="vuln-zone-count"></span>
+            </div>
+            <p class="vuln-zone-hint">포커스 후 <kbd>Ctrl</kbd>+<kbd>A</kbd>로 복사</p>
+            <div class="vuln-text-frame">
+                <textarea class="vuln-url-textarea" readonly spellcheck="false" wrap="off"></textarea>
+            </div>
+        </section>
+    </template>
+
+    <style>
+        .vuln-sidebar .vuln-sidebar-actions {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .vuln-run-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .vuln-sidebar .vuln-sidebar-hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .vuln-sidebar .vuln-sidebar-hint code {
+            font-size: 0.85em;
+        }
+        .vuln-site-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        .vuln-refresh {
+            font-size: 14px;
+            padding: 2px 8px;
+        }
+        .vuln-site-list {
+            padding: 8px;
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+        }
+        .vuln-site-empty {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 12px;
+            text-align: center;
+        }
+        .vuln-site-row {
+            display: flex;
+            align-items: stretch;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .vuln-site-select {
+            flex: 1;
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .vuln-site-select:hover {
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+        }
+        .vuln-site-select.active {
+            border-color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent-cyan);
+        }
+        .vuln-site-del {
+            width: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .vuln-site-del:hover {
+            border-color: var(--accent-rose);
+            color: var(--accent-rose);
+        }
+        .vuln-main .vuln-placeholder {
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-muted);
+            max-width: 480px;
+        }
+        .vuln-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        .vuln-zones {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .vuln-zone-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .vuln-zone-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .vuln-zone-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .vuln-zone-hint {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .vuln-text-frame {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        .vuln-url-textarea {
+            display: block;
+            width: 100%;
+            min-height: 6rem;
+            max-height: 40vh;
+            margin: 0;
+            padding: 0.75rem 1rem;
+            box-sizing: border-box;
+            border: none;
+            resize: vertical;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: var(--text-primary);
+            background: transparent;
+            outline: none;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .vuln-total {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        kbd {
+            font-family: var(--font-mono);
+            font-size: 0.75em;
+            padding: 0.1em 0.35em;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+    </style>
+
+    <script>
+    (function () {
+        const ZONES = [
+            { key: 'get', label: 'GET', badge: 'method-badge get', sub: 'form · input' },
+            { key: 'post', label: 'POST', badge: 'method-badge post', sub: 'form · input' },
+            { key: 'link', label: 'LINK', badge: 'type-badge link', sub: 'a href' },
+            { key: 'script', label: 'JS', badge: 'type-badge script', sub: 'script · AJAX' }
+        ];
+
+        let selectedFilename = null;
+
+        function esc(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        async function loadList() {
+            const res = await fetch('/api/access_list/list');
+            const data = await res.json();
+            const items = data.items || [];
+            const listEl = document.getElementById('vulnSiteList');
+            const emptyEl = document.getElementById('vulnSiteEmpty');
+            if (!items.length) {
+                listEl.innerHTML = '';
+                listEl.appendChild(emptyEl);
+                emptyEl.style.display = 'block';
+                return [];
+            }
+            emptyEl.style.display = 'none';
+            listEl.innerHTML = '';
+            items.forEach(function (it) {
+                const row = document.createElement('div');
+                row.className = 'vuln-site-row';
+                const sel = document.createElement('button');
+                sel.type = 'button';
+                sel.className = 'vuln-site-select' + (selectedFilename === it.filename ? ' active' : '');
+                sel.textContent = it.site_label;
+                sel.dataset.filename = it.filename;
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.className = 'vuln-site-del';
+                del.title = '이 사이트 저장 삭제 (해당 사이트가 들어 있는 히스토리 스냅샷도 함께 삭제될 수 있음)';
+                del.innerHTML = '&times;';
+                del.dataset.filename = it.filename;
+                row.appendChild(sel);
+                row.appendChild(del);
+                listEl.appendChild(row);
+            });
+            return items;
+        }
+
+        function renderDetail(record) {
+            const sec = record.sections || {};
+            const zones = document.getElementById('vulnZones');
+            zones.innerHTML = '';
+            const tpl = document.getElementById('tplVulnZone');
+
+            ZONES.forEach(function (z) {
+                const lines = sec[z.key] || [];
+                const node = tpl.content.cloneNode(true);
+                const title = node.querySelector('.vuln-zone-title');
+                const count = node.querySelector('.vuln-zone-count');
+                const ta = node.querySelector('textarea');
+
+                title.innerHTML = '<span class="' + esc(z.badge) + '">' + esc(z.label) + '</span> ' +
+                    '<span>' + esc(z.sub) + '</span>';
+                count.textContent = lines.length + '건';
+                ta.value = lines.join('\n');
+                ta.rows = Math.max(4, Math.min(lines.length, 20) || 4);
+                ta.setAttribute('aria-label', z.label + ' URL');
+
+                zones.appendChild(node);
+            });
+
+            const total = ZONES.reduce(function (a, z) {
+                return a + (sec[z.key] || []).length;
+            }, 0);
+            document.getElementById('vulnTotal').textContent = '전체 ' + total + '건';
+            document.getElementById('vulnMainPlaceholder').style.display = 'none';
+            document.getElementById('vulnMainContent').style.display = 'block';
+        }
+
+        async function selectFile(filename) {
+            const res = await fetch('/api/access_list/file/' + encodeURIComponent(filename));
+            if (!res.ok) {
+                alert('불러오기 실패');
+                return;
+            }
+            const record = await res.json();
+            selectedFilename = filename;
+            renderDetail(record);
+            document.querySelectorAll('.vuln-site-select').forEach(function (b) {
+                b.classList.toggle('active', b.dataset.filename === filename);
+            });
+        }
+
+        document.getElementById('vulnSiteList').addEventListener('click', function (e) {
+            const t = e.target;
+            if (t.classList.contains('vuln-site-select')) {
+                selectFile(t.dataset.filename);
+            }
+            if (t.classList.contains('vuln-site-del')) {
+                const fn = t.dataset.filename;
+                if (!confirm(
+                    'access_list 파일을 삭제합니다.\n' +
+                    '이 사이트 URL이 포함된 히스토리(scan_data/history/scan_*.json)도 함께 삭제됩니다 ' +
+                    '(한 파일에 여러 사이트가 있으면 파일 전체가 삭제됩니다).\n\n' + fn
+                )) return;
+                fetch('/api/access_list/file/' + encodeURIComponent(fn), { method: 'DELETE' })
+                    .then(function (r) { return r.json(); })
+                    .then(function (j) {
+                        if (j.error) {
+                            alert(j.error);
+                            return;
+                        }
+                        if (j.history_deleted && j.history_deleted.length) {
+                            alert('히스토리에서도 삭제됨:\n' + j.history_deleted.join('\n'));
+                        }
+                        if (selectedFilename === fn) {
+                            selectedFilename = null;
+                            document.getElementById('vulnMainContent').style.display = 'none';
+                            document.getElementById('vulnMainPlaceholder').style.display = 'block';
+                        }
+                        loadList().then(function (items) {
+                            if (items && items.length) {
+                                selectFile(items[0].filename);
+                            }
+                        });
+                    });
+            }
+        });
+
+        document.getElementById('btnVulnRefresh').addEventListener('click', loadList);
+
+        function syncFromScan(showAlert) {
+            return fetch('/api/access_list/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: '{}'
+            })
+                .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+                .then(function (x) {
+                    if (!x.ok) {
+                        if (showAlert) {
+                            alert(x.j.error || '동기화 실패');
+                        } else {
+                            console.warn('List 자동 동기화:', x.j.error || x.ok);
+                        }
+                        return null;
+                    }
+                    if (showAlert) {
+                        const n = (x.j.summaries || []).length;
+                        alert(n === 0
+                            ? '저장할 사이트가 없습니다. 최근 히스토리의 sites가 비어 있을 수 있습니다.'
+                            : ('동기화 완료: ' + n + '개 사이트'));
+                    }
+                    return x.j;
+                })
+                .catch(function (err) {
+                    if (showAlert) {
+                        alert('요청 실패');
+                    } else {
+                        console.warn('List 자동 동기화 요청 실패', err);
+                    }
+                    return null;
+                });
+        }
+
+        document.getElementById('btnVulnRun').addEventListener('click', function () {
+            const btn = this;
+            if (btn.disabled) return;
+            btn.disabled = true;
+            syncFromScan(true)
+                .then(function () { return loadList(); })
+                .then(function (items) {
+                    if (items && items.length) {
+                        return selectFile(items[0].filename);
+                    }
+                })
+                .finally(function () { btn.disabled = false; });
+        });
+
+        async function boot() {
+            const hasHistory = document.body.getAttribute('data-has-history') === 'true';
+            if (hasHistory) {
+                await syncFromScan(false);
+            }
+            const items = await loadList();
+            if (items.length) {
+                await selectFile(items[0].filename);
+            }
+        }
+
+        boot();
+    })();
+    </script>
+</body>
+</html>

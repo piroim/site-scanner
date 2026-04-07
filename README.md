@@ -8,34 +8,40 @@ Flask 기반의 실시간 웹 스캐너 대시보드입니다.
 
 ```
 site-scanner/
-├── app.py                      # Flask 웹 서버 (메인 실행 파일)
+├── app.py                      # Flask: 대시보드·List·스캔/히스토리/access_list API
 ├── README.md
-├── DEVLOG.md                   # 개발 로그
+├── DEVLOG.md
 │
-├── scanner/                    # 스캔 로직 모듈
-│   ├── __init__.py
-│   ├── config.py               # 헤더/세션 설정 (사이트별 쿠키 등)
-│   └── run_scan.py             # 스캔 함수 (forms, inputs, scripts, info, a href)
+├── scanner/                    # 핵심 파이프라인
+│   ├── run_scan.py             # Playwright 스캔 (forms / inputs / scripts / info / links)
+│   ├── run_list.py             # 히스토리 병합 → 구역별 엔드포인트(GET·POST·LINK·JS) 집계
+│   ├── access_list.py          # history → access_list/*.json (List 페이지와 동기)
+│   └── config.py               # 사이트별 헤더·쿠키·세션
 │
-├── module/                     # 공통 모듈
-│   ├── headers_module.py       # HTTP 헤더 정의 및 파싱
-│   └── imports.py              # 공통 라이브러리 import
+├── templates/                  # UI
+│   ├── dashboard.html          # 스캔·필터·히스토리
+│   ├── list.html               # 엔드포인트 목록(List)·access_list 뷰
+│   ├── settings.html           # 스캔·표시 옵션
+│   └── includes/
+│       └── app_header.html     # 공통 네비게이션
 │
-├── templates/                  # HTML 템플릿
-│   ├── dashboard.html          # 메인 대시보드
-│   └── settings.html           # 설정 페이지
-│
-├── static/                     # 정적 파일
-│   └── style.css               # 스타일시트 (다크/라이트 모드)
-│
-├── scan_data/                  # 스캔 결과 저장
-│   ├── scan_results.json       # 최근 스캔 결과
+├── scan_data/                  # 로컬 저장 (스캔·동기화의 실제 데이터)
+│   ├── scan_results.json       # 마지막 스캔 결과(대시보드 기본)
 │   ├── settings.json           # 사용자 설정
-│   └── history/                # URL별 히스토리
+│   ├── history/                # scan_*.json (List/access_list 동기화의 기준)
+│   └── access_list/            # 사이트별 구역 JSON
 │
-└── docs/                       # 문서
-    ├── error_issue_1.md        # 오류 리포트
-    └── edit_issue_1.md         # 수정 리포트
+├── module/                     # HTTP 헤더·공통 import (스캔 보조)
+│   ├── headers_module.py
+│   └── imports.py
+│
+├── static/
+│   └── style.css               # 다크/라이트 테마
+│
+└── docs/                       # 이슈·메모
+    ├── error_issue_1.md
+    ├── edit_issue_1.md
+    └── error_template.md
 ```
 
 ## 🚀 실행 방법
@@ -134,10 +140,6 @@ https://demo.org
 
 ### 단축키
 - `Ctrl + Enter`: URL 입력 후 빠른 스캔 시작
-
-## ⚠️ 주의사항
-
-- **허가된 대상**에만 사용하세요.
 
 ## 📋 변경 이력
 
