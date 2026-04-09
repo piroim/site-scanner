@@ -65,6 +65,11 @@
        display: flex;
    }
 
+   /* Utility: JS에서 표시/숨김 토글용 (인라인 style 대체) */
+   .u-hidden {
+       display: none !important;
+   }
+
    /* ========================================
       Global top header (Dashboard / Vuln / Settings)
       ======================================== */
@@ -963,6 +968,16 @@
        background: rgba(0, 0, 0, 0.2);
        border-bottom: 1px solid var(--border);
    }
+
+   .results-table th.col-type,
+   .results-table th.col-method,
+   .results-table th.col-status {
+       width: 70px;
+   }
+
+   .results-table th.col-site {
+       width: 200px;
+   }
    
    .results-table td {
        padding: 14px 18px;
@@ -1412,4 +1427,235 @@
        background: rgba(255, 255, 255, 0.05);
        border-color: var(--accent-cyan);
        color: var(--accent-cyan);
+   }
+
+   /* ========================================
+      List page (API LIST / vuln sidebar)
+      ======================================== */
+   .vuln-sidebar .vuln-sidebar-actions {
+       padding: 12px 16px;
+       border-bottom: 1px solid var(--border);
+   }
+
+   .vuln-run-btn {
+       width: 100%;
+       margin-bottom: 10px;
+   }
+
+   .vuln-csv-actions {
+       display: flex;
+       gap: 8px;
+       margin-bottom: 10px;
+   }
+
+   .vuln-csv-btn {
+       flex: 1;
+       font-size: 11px;
+       padding: 8px 6px;
+   }
+
+   .vuln-csv-btn:disabled {
+       opacity: 0.45;
+       cursor: not-allowed;
+   }
+
+   .vuln-sidebar .vuln-sidebar-hint {
+       font-size: 0.78rem;
+       color: var(--text-muted);
+       line-height: 1.5;
+       margin: 0;
+   }
+
+   .vuln-sidebar .vuln-sidebar-hint code {
+       font-size: 0.85em;
+   }
+
+   .vuln-site-list-header {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       gap: 8px;
+       padding: 10px 16px;
+       font-size: 10px;
+       font-weight: 600;
+       text-transform: uppercase;
+       letter-spacing: 0.5px;
+       color: var(--text-muted);
+   }
+
+   .vuln-site-list-header-btns {
+       display: flex;
+       align-items: center;
+       gap: 6px;
+       flex-shrink: 0;
+   }
+
+   .vuln-delete-all {
+       font-size: 10px;
+       padding: 4px 8px;
+       text-transform: none;
+       letter-spacing: 0;
+       color: var(--text-muted);
+   }
+
+   .vuln-delete-all:hover {
+       color: var(--accent-rose);
+       border-color: var(--accent-rose);
+   }
+
+   .vuln-refresh {
+       font-size: 14px;
+       padding: 2px 8px;
+   }
+
+   .vuln-site-list {
+       padding: 8px;
+       max-height: calc(100vh - 280px);
+       overflow-y: auto;
+   }
+
+   .vuln-site-empty {
+       font-size: 12px;
+       color: var(--text-muted);
+       padding: 12px;
+       text-align: center;
+   }
+
+   .vuln-site-row {
+       display: flex;
+       align-items: stretch;
+       gap: 4px;
+       margin-bottom: 6px;
+   }
+
+   .vuln-site-select {
+       flex: 1;
+       text-align: left;
+       padding: 10px 12px;
+       border: 1px solid var(--border);
+       border-radius: 8px;
+       background: var(--bg-dark);
+       color: var(--text-secondary);
+       font-size: 12px;
+       cursor: pointer;
+       transition: background 0.15s, border-color 0.15s;
+   }
+
+   .vuln-site-select:hover {
+       border-color: var(--accent-cyan);
+       color: var(--text-primary);
+   }
+
+   .vuln-site-select.active {
+       border-color: var(--accent-cyan);
+       background: rgba(34, 211, 238, 0.1);
+       color: var(--accent-cyan);
+   }
+
+   .vuln-site-del {
+       width: 36px;
+       border: 1px solid var(--border);
+       border-radius: 8px;
+       background: transparent;
+       color: var(--text-muted);
+       cursor: pointer;
+       font-size: 16px;
+       line-height: 1;
+   }
+
+   .vuln-site-del:hover {
+       border-color: var(--accent-rose);
+       color: var(--accent-rose);
+   }
+
+   .vuln-main .vuln-placeholder {
+       padding: 2rem;
+       background: var(--bg-card);
+       border: 1px solid var(--border);
+       border-radius: 12px;
+       color: var(--text-muted);
+       max-width: 480px;
+   }
+
+   .vuln-meta {
+       font-size: 12px;
+       color: var(--text-muted);
+       margin-bottom: 1rem;
+   }
+
+   .vuln-zones {
+       display: flex;
+       flex-direction: column;
+       gap: 2rem;
+   }
+
+   .vuln-zone-head {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       gap: 1rem;
+       margin-bottom: 0.5rem;
+   }
+
+   .vuln-zone-title {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       flex-wrap: wrap;
+       margin: 0;
+       font-size: 1.05rem;
+       font-weight: 600;
+   }
+
+   .vuln-zone-count {
+       font-size: 0.85rem;
+       color: var(--text-muted);
+   }
+
+   .vuln-zone-hint {
+       margin: 0 0 0.5rem 0;
+       font-size: 0.75rem;
+       color: var(--text-muted);
+   }
+
+   .vuln-text-frame {
+       border: 1px solid var(--border);
+       border-radius: 10px;
+       background: rgba(0, 0, 0, 0.15);
+       overflow: hidden;
+   }
+
+   .vuln-url-textarea {
+       display: block;
+       width: 100%;
+       min-height: 6rem;
+       max-height: 40vh;
+       margin: 0;
+       padding: 0.75rem 1rem;
+       box-sizing: border-box;
+       border: none;
+       resize: vertical;
+       font-family: var(--font-mono);
+       font-size: 0.78rem;
+       line-height: 1.45;
+       color: var(--text-primary);
+       background: transparent;
+       outline: none;
+       white-space: pre;
+       overflow-x: auto;
+   }
+
+   .vuln-total {
+       margin-top: 0.75rem;
+       font-size: 0.85rem;
+       color: var(--text-muted);
+   }
+
+   .vuln-main kbd {
+       font-family: var(--font-mono);
+       font-size: 0.75em;
+       padding: 0.1em 0.35em;
+       border-radius: 4px;
+       border: 1px solid var(--border);
+       background: var(--bg-card);
    }

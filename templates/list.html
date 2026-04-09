@@ -22,15 +22,21 @@
             <button type="button" id="btnVulnRun" class="btn btn-primary vuln-run-btn" {% if not has_history_file %}disabled title="히스토리 필요"{% endif %}>
                 다시 동기화
             </button>
-            <!-- <p class="vuln-sidebar-hint">
-                페이지를 열면 <code>scan_data/history/</code>의 <code>scan_*.json</code>을
-                <strong>전부 병합</strong>한 뒤 <code>scan_data/access_list/</code>에 자동 반영합니다.<br>
-                run_list 규칙으로 GET/POST/LINK/JS 구역만 묶으며 HTTP 재요청은 없습니다. 수동으로 최신 히스토리와 맞출 때만 위 버튼을 누르세요.
-            </p> -->
+            <div class="vuln-csv-actions">
+                <button type="button" id="btnCsvSelected" class="btn btn-small vuln-csv-btn" disabled title="왼쪽에서 사이트를 선택한 뒤 사용">
+                    CSV 저장
+                </button>
+                <button type="button" id="btnCsvZip" class="btn btn-small vuln-csv-btn" disabled title="사이트별 CSV를 ZIP으로">
+                    전체 ZIP
+                </button>
+            </div>
         </div>
         <div class="vuln-site-list-header">
             <span>저장된 URL (사이트)</span>
-            <button type="button" id="btnVulnRefresh" class="btn-clear vuln-refresh" title="목록 새로고침">↻</button>
+            <span class="vuln-site-list-header-btns">
+                <button type="button" id="btnVulnDeleteAll" class="btn-clear vuln-delete-all" title="access_list JSON 전부 삭제(히스토리는 유지)">전체 삭제</button>
+                <button type="button" id="btnVulnRefresh" class="btn-clear vuln-refresh" title="목록 새로고침">↻</button>
+            </span>
         </div>
         <div id="vulnSiteList" class="vuln-site-list">
             <div class="vuln-site-empty" id="vulnSiteEmpty">동기화 중이거나 저장된 사이트가 없습니다. 히스토리(scan_*.json)가 있으면 자동으로 채워집니다.</div>
@@ -47,7 +53,7 @@
             <p>왼쪽 목록에서 사이트를 선택하세요.</p>
         </div>
 
-        <div id="vulnMainContent" class="vuln-main-content" style="display: none;">
+        <div id="vulnMainContent" class="vuln-main-content u-hidden">
             <p class="vuln-meta" id="vulnMeta"></p>
             <div class="vuln-zones" id="vulnZones"></div>
             <p class="vuln-total" id="vulnTotal"></p>
@@ -67,184 +73,26 @@
         </section>
     </template>
 
-    <style>
-        .vuln-sidebar .vuln-sidebar-actions {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        .vuln-run-btn {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .vuln-sidebar .vuln-sidebar-hint {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin: 0;
-        }
-        .vuln-sidebar .vuln-sidebar-hint code {
-            font-size: 0.85em;
-        }
-        .vuln-site-list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-        }
-        .vuln-refresh {
-            font-size: 14px;
-            padding: 2px 8px;
-        }
-        .vuln-site-list {
-            padding: 8px;
-            max-height: calc(100vh - 280px);
-            overflow-y: auto;
-        }
-        .vuln-site-empty {
-            font-size: 12px;
-            color: var(--text-muted);
-            padding: 12px;
-            text-align: center;
-        }
-        .vuln-site-row {
-            display: flex;
-            align-items: stretch;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        .vuln-site-select {
-            flex: 1;
-            text-align: left;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-dark);
-            color: var(--text-secondary);
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .vuln-site-select:hover {
-            border-color: var(--accent-cyan);
-            color: var(--text-primary);
-        }
-        .vuln-site-select.active {
-            border-color: var(--accent-cyan);
-            background: rgba(34, 211, 238, 0.1);
-            color: var(--accent-cyan);
-        }
-        .vuln-site-del {
-            width: 36px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 1;
-        }
-        .vuln-site-del:hover {
-            border-color: var(--accent-rose);
-            color: var(--accent-rose);
-        }
-        .vuln-main .vuln-placeholder {
-            padding: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-muted);
-            max-width: 480px;
-        }
-        .vuln-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-        .vuln-zones {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .vuln-zone-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        .vuln-zone-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-        .vuln-zone-count {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .vuln-zone-hint {
-            margin: 0 0 0.5rem 0;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-        .vuln-text-frame {
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-        }
-        .vuln-url-textarea {
-            display: block;
-            width: 100%;
-            min-height: 6rem;
-            max-height: 40vh;
-            margin: 0;
-            padding: 0.75rem 1rem;
-            box-sizing: border-box;
-            border: none;
-            resize: vertical;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            line-height: 1.45;
-            color: var(--text-primary);
-            background: transparent;
-            outline: none;
-            white-space: pre;
-            overflow-x: auto;
-        }
-        .vuln-total {
-            margin-top: 0.75rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        kbd {
-            font-family: var(--font-mono);
-            font-size: 0.75em;
-            padding: 0.1em 0.35em;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-        }
-    </style>
-
     <script>
     (function () {
         const ZONES = [
             { key: 'get', label: 'GET', badge: 'method-badge get', sub: 'form · input' },
             { key: 'post', label: 'POST', badge: 'method-badge post', sub: 'form · input' },
             { key: 'link', label: 'LINK', badge: 'type-badge link', sub: 'a href' },
-            { key: 'script', label: 'JS', badge: 'type-badge script', sub: 'script · AJAX' }
+            { key: 'script', label: 'JS', badge: 'type-badge script', sub: 'script · AJAX' },
+            { key: 'info', label: 'INFO', badge: 'type-badge info', sub: '패턴 탐지' }
         ];
 
         let selectedFilename = null;
+        let lastListItems = [];
+
+        function updateCsvButtons(items) {
+            const zipBtn = document.getElementById('btnCsvZip');
+            const selBtn = document.getElementById('btnCsvSelected');
+            const hasItems = items && items.length > 0;
+            zipBtn.disabled = !hasItems;
+            selBtn.disabled = !hasItems || !selectedFilename;
+        }
 
         function esc(s) {
             const d = document.createElement('div');
@@ -256,15 +104,17 @@
             const res = await fetch('/api/access_list/list');
             const data = await res.json();
             const items = data.items || [];
+            lastListItems = items;
             const listEl = document.getElementById('vulnSiteList');
             const emptyEl = document.getElementById('vulnSiteEmpty');
             if (!items.length) {
                 listEl.innerHTML = '';
                 listEl.appendChild(emptyEl);
-                emptyEl.style.display = 'block';
+                emptyEl.classList.remove('u-hidden');
+                updateCsvButtons([]);
                 return [];
             }
-            emptyEl.style.display = 'none';
+            emptyEl.classList.add('u-hidden');
             listEl.innerHTML = '';
             items.forEach(function (it) {
                 const row = document.createElement('div');
@@ -284,6 +134,7 @@
                 row.appendChild(del);
                 listEl.appendChild(row);
             });
+            updateCsvButtons(items);
             return items;
         }
 
@@ -305,7 +156,7 @@
                 count.textContent = lines.length + '건';
                 ta.value = lines.join('\n');
                 ta.rows = Math.max(4, Math.min(lines.length, 20) || 4);
-                ta.setAttribute('aria-label', z.label + ' URL');
+                ta.setAttribute('aria-label', z.key === 'info' ? z.label + ' 내용' : z.label + ' URL');
 
                 zones.appendChild(node);
             });
@@ -314,8 +165,8 @@
                 return a + (sec[z.key] || []).length;
             }, 0);
             document.getElementById('vulnTotal').textContent = '전체 ' + total + '건';
-            document.getElementById('vulnMainPlaceholder').style.display = 'none';
-            document.getElementById('vulnMainContent').style.display = 'block';
+            document.getElementById('vulnMainPlaceholder').classList.add('u-hidden');
+            document.getElementById('vulnMainContent').classList.remove('u-hidden');
         }
 
         async function selectFile(filename) {
@@ -330,6 +181,7 @@
             document.querySelectorAll('.vuln-site-select').forEach(function (b) {
                 b.classList.toggle('active', b.dataset.filename === filename);
             });
+            updateCsvButtons(lastListItems);
         }
 
         document.getElementById('vulnSiteList').addEventListener('click', function (e) {
@@ -356,8 +208,8 @@
                         }
                         if (selectedFilename === fn) {
                             selectedFilename = null;
-                            document.getElementById('vulnMainContent').style.display = 'none';
-                            document.getElementById('vulnMainPlaceholder').style.display = 'block';
+                            document.getElementById('vulnMainContent').classList.add('u-hidden');
+                            document.getElementById('vulnMainPlaceholder').classList.remove('u-hidden');
                         }
                         loadList().then(function (items) {
                             if (items && items.length) {
@@ -369,6 +221,68 @@
         });
 
         document.getElementById('btnVulnRefresh').addEventListener('click', loadList);
+
+        document.getElementById('btnCsvSelected').addEventListener('click', function () {
+            if (!selectedFilename) {
+                alert('먼저 왼쪽 목록에서 사이트를 선택하세요.');
+                return;
+            }
+            fetch('/api/access_list/export/csv/site', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: selectedFilename })
+            })
+                .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+                .then(function (x) {
+                    if (!x.ok || x.j.error) {
+                        alert(x.j.error || 'CSV 저장에 실패했습니다.');
+                        return;
+                    }
+                    window.location.href = '/api/export/download/' + encodeURIComponent(x.j.filename);
+                })
+                .catch(function () { alert('요청 실패'); });
+        });
+
+        document.getElementById('btnCsvZip').addEventListener('click', function () {
+            fetch('/api/access_list/export/csv/zip', { method: 'POST' })
+                .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+                .then(function (x) {
+                    if (!x.ok || x.j.error) {
+                        alert(x.j.error || 'ZIP 저장에 실패했습니다.');
+                        return;
+                    }
+                    window.location.href = '/api/export/download/' + encodeURIComponent(x.j.filename);
+                })
+                .catch(function () { alert('요청 실패'); });
+        });
+
+        document.getElementById('btnVulnDeleteAll').addEventListener('click', function () {
+            if (!confirm(
+                'scan_data/access_list/ 의 저장 목록과 scan_data/history/ 의 scan_*.json 스캔 히스토리를 모두 삭제합니다.\n\n' +
+                '이 작업은 되돌릴 수 없습니다.\n\n' +
+                '계속할까요?'
+            )) return;
+            fetch('/api/access_list/all', { method: 'DELETE' })
+                .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+                .then(function (x) {
+                    if (!x.ok || x.j.error) {
+                        alert(x.j.error || '삭제 실패');
+                        return;
+                    }
+                    const na = (x.j.deleted || []).length;
+                    const nh = (x.j.history_deleted || []).length;
+                    selectedFilename = null;
+                    document.getElementById('vulnMainContent').classList.add('u-hidden');
+                    document.getElementById('vulnMainPlaceholder').classList.remove('u-hidden');
+                    loadList();
+                    if (na === 0 && nh === 0) {
+                        alert('삭제할 파일이 없었습니다.');
+                    } else {
+                        alert('삭제 완료: access_list ' + na + '개, history ' + nh + '개');
+                    }
+                })
+                .catch(function () { alert('요청 실패'); });
+        });
 
         function syncFromScan(showAlert) {
             return fetch('/api/access_list/run', {

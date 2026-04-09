@@ -8,6 +8,8 @@ Site Scanner - Flask Web Server
 
 from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for
 from datetime import datetime
+import io
+import mimetypes
 from pathlib import Path
 from scanner import run_scan
 import threading
@@ -16,10 +18,17 @@ import os
 import re
 import logging
 from scanner.access_list import (
+    delete_all_access_list_and_history,
     delete_history_files_for_site_label,
     export_access_list_from_history_dir,
     load_access_record,
 )
+from scanner.export_csv import (
+    write_access_list_csv,
+    write_access_list_csv_for_file,
+    write_access_list_csv_zip_per_site,
+)
+from scanner.scan_io import HISTORY_DIR, RESULTS_FILE, SCAN_DATA_DIR
 
 logging.basicConfig(
     filename='flask_debug.log', 
@@ -33,11 +42,12 @@ app = Flask(__name__)
 # ========================================
 # 저장 경로 설정
 # ========================================
-DATA_DIR = Path(__file__).parent / "scan_data"
+DATA_DIR = SCAN_DATA_DIR
 DATA_DIR.mkdir(exist_ok=True)
-RESULTS_FILE = DATA_DIR / "scan_results.json"
-HISTORY_DIR = DATA_DIR / "history"
 HISTORY_DIR.mkdir(exist_ok=True)
+# CSV/ZIP 내보내기 임시 저장 후 다운로드 시 삭제
+CSV_DATA_DIR = Path(__file__).resolve().parent / "csv_data"
+CSV_DATA_DIR.mkdir(exist_ok=True)
 # scan_data/access_list (구 vuln_access 디렉터리는 최초 기동 시 이름 변경·병합)
 _legacy_access_dir = DATA_DIR / "vuln_access"
 ACCESS_LIST_DIR = DATA_DIR / "access_list"
@@ -92,22 +102,7 @@ scan_lock = threading.Lock()
 # ========================================
 # 파일 저장/로드 함수
 # ========================================
-
-def save_results_to_file(results, filename=None):
-    """스캔 결과를 JSON 파일로 저장"""
-    if filename is None:
-        filename = RESULTS_FILE
-    
-    data = {
-        "saved_at": datetime.now().isoformat(),
-        "results": results
-    }
-    
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    
-    return filename
-
+# save_results_to_file, save_to_history → scanner.scan_io
 
 def load_results_from_file(filename=None):
     """JSON 파일에서 스캔 결과 로드"""
@@ -131,37 +126,6 @@ def has_history_scan_files():
     if not HISTORY_DIR.is_dir():
         return False
     return any(HISTORY_DIR.glob("scan_*.json"))
-
-
-def save_to_history(results):
-    """스캔 결과를 히스토리에 저장 (타임스탬프 포함, 동일 사이트 이전 히스토리 삭제)"""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # 사이트 이름으로 파일명 생성 (파일명에 사용 불가능한 문자 제거: : / \ * ? " < > |)
-    site_names = "_".join([
-        s['url'].replace('.', '-').replace(':', '-').replace('/', '-')[:20]
-        for s in results.get('sites', [])[:3]
-    ])
-    if not site_names:
-        site_names = "unknown"
-
-    # 동일 사이트의 이전 히스토리 파일 삭제
-    current_sites = set(s['url'] for s in results.get('sites', []))
-    for old_file in HISTORY_DIR.glob("scan_*.json"):
-        try:
-            with open(old_file, 'r', encoding='utf-8') as f:
-                old_data = json.load(f)
-            old_sites = set(s['url'] for s in old_data.get('results', {}).get('sites', []))
-            # 동일한 사이트 구성이면 삭제
-            if old_sites == current_sites:
-                old_file.unlink()
-        except Exception:
-            pass
-
-    filename = HISTORY_DIR / f"scan_{timestamp}_{site_names}.json"
-    save_results_to_file(results, filename)
-
-    return filename
 
 
 def get_history_list():
@@ -188,72 +152,6 @@ def get_history_list():
     
     return history[:50]  # 최근 50개만
 
-
-def export_to_markdown(results):
-    """스캔 결과를 Markdown 형식으로 내보내기"""
-    md_lines = []
-    md_lines.append("# Site Scanner Report")
-    md_lines.append(f"\n> Generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-    
-    # 사이트 목록
-    md_lines.append("## 📌 스캔 대상")
-    for site in results.get('sites', []):
-        md_lines.append(f"- **{site['url']}** (스캔: {site.get('lastScan', 'N/A')})")
-    
-    # 요약 통계
-    all_results = results.get('results', [])
-    form_count = len([r for r in all_results if r['type'] == 'form'])
-    input_count = len([r for r in all_results if r['type'] == 'input'])
-    script_count = len([r for r in all_results if r['type'] == 'script'])
-    info_count = len([r for r in all_results if r['type'] == 'info'])
-    
-    md_lines.append("\n## 📊 요약")
-    md_lines.append(f"| 항목 | 개수 |")
-    md_lines.append(f"|------|------|")
-    md_lines.append(f"| Forms | {form_count} |")
-    md_lines.append(f"| Inputs | {input_count} |")
-    md_lines.append(f"| Scripts | {script_count} |")
-    md_lines.append(f"| Information | {info_count} |")
-    md_lines.append(f"| **Total** | **{len(all_results)}** |")
-    
-    # 상세 결과
-    for result_type, emoji, label in [
-        ('form', '📝', 'Forms'),
-        ('input', '⌨️', 'Inputs'),
-        ('script', '📜', 'Scripts'),
-        ('info', 'ℹ️', 'Information')
-    ]:
-        type_results = [r for r in all_results if r['type'] == result_type]
-        if type_results:
-            md_lines.append(f"\n## {emoji} {label}")
-            md_lines.append("")
-            
-            for r in type_results:
-                site = next((s for s in results['sites'] if s['id'] == r['siteId']), {})
-                site_url = site.get('url', 'Unknown')
-                
-                if result_type == 'form':
-                    md_lines.append(f"### `{r.get('method', 'GET')}` {r.get('url', 'N/A')}")
-                    md_lines.append(f"- **Site**: {site_url}")
-                    md_lines.append(f"- **Status**: {r.get('status', 'N/A')}")
-                    if r.get('details'):
-                        md_lines.append("- **Inputs**:")
-                        for d in r['details']:
-                            md_lines.append(f"  - `{d}`")
-                    md_lines.append("")
-                    
-                elif result_type == 'script':
-                    md_lines.append(f"- `{r.get('url', 'N/A')}` ({site_url})")
-                    
-                elif result_type == 'info':
-                    md_lines.append(f"- **{site_url}**: `{r.get('content', 'N/A')[:80]}...`")
-                    if r.get('details'):
-                        md_lines.append(f"  - {', '.join(r['details'])}")
-                    
-                else:
-                    md_lines.append(f"- {r.get('url', 'N/A')} ({site_url})")
-    
-    return "\n".join(md_lines)
 
 # ========================================
 # 설정 관리
@@ -407,6 +305,33 @@ def access_list_delete_file(filename):
     return jsonify({"ok": True, "history_deleted": history_deleted})
 
 
+@app.route('/api/access_list/all', methods=['DELETE'])
+@app.route('/api/vuln/access/all', methods=['DELETE'])  # 하위 호환
+def access_list_delete_all():
+    """
+    access_list 디렉터리의 저장 URL 목록 JSON과 history의 scan_*.json을 모두 삭제한다.
+    """
+    try:
+        result = delete_all_access_list_and_history(ACCESS_LIST_DIR, HISTORY_DIR)
+    except OSError as e:
+        logging.error("access_list 전체 삭제 실패: %s", e)
+        return jsonify({"error": str(e)}), 500
+    access_n = len(result["access_list"])
+    hist_n = len(result["history"])
+    logging.info(
+        "access_list 전체 삭제: access_list=%s개, history=%s개",
+        access_n,
+        hist_n,
+    )
+    return jsonify(
+        {
+            "ok": True,
+            "deleted": result["access_list"],
+            "history_deleted": result["history"],
+        }
+    )
+
+
 @app.route('/api/access_list/run', methods=['POST'])
 @app.route('/api/vuln/access/run', methods=['POST'])  # 하위 호환
 def access_list_run():
@@ -445,11 +370,10 @@ def start_scan():
     if not urls:
         return jsonify({"error": "URL을 입력해주세요"}), 400
     
-    # 백그라운드 스캔 시작
-    save_callbacks = (save_results_to_file, save_to_history)
+    # 백그라운드 스캔 시작 (결과는 scan_io로 자동 저장)
     thread = threading.Thread(
         target=run_scan,
-        args=(urls, options, scan_status, scan_lock, add_log, save_callbacks)
+        args=(urls, options, scan_status, scan_lock, add_log),
     )
     thread.daemon = True
     thread.start()
@@ -488,30 +412,6 @@ def clear_results():
         add_log("결과가 초기화되었습니다")
     
     return jsonify({"message": "초기화 완료"})
-
-
-@app.route('/api/save', methods=['POST'])
-def save_results():
-    """현재 결과를 파일로 저장"""
-    global scan_status
-    
-    with scan_lock:
-        results = scan_status["results"]
-    
-    if not results.get('sites'):
-        return jsonify({"error": "저장할 결과가 없습니다"}), 400
-    
-    # 현재 결과 저장 (자동 저장용)
-    save_results_to_file(results)
-    
-    # 히스토리에도 저장
-    history_file = save_to_history(results)
-    add_log(f"결과 저장 완료: {history_file.name}")
-    
-    return jsonify({
-        "message": "저장 완료",
-        "filename": history_file.name
-    })
 
 
 @app.route('/api/load', methods=['POST'])
@@ -583,46 +483,109 @@ def delete_history(filename):
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/api/export/markdown', methods=['POST'])
-def export_markdown():
-    """결과를 Markdown으로 내보내기"""
-    global scan_status
-    
-    with scan_lock:
-        results = scan_status["results"]
-    
-    if not results.get('sites'):
-        return jsonify({"error": "내보낼 결과가 없습니다"}), 400
-    
-    md_content = export_to_markdown(results)
-    
-    # 파일로 저장
+@app.route('/api/export/csv', methods=['POST'])
+def export_access_list_csv():
+    """access_list/*.json을 병합한 CSV를 csv_data에 저장하고 파일명을 반환한다."""
+    try:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_path = CSV_DATA_DIR / f"access_list_{timestamp}.csv"
+        write_access_list_csv(out_path, ACCESS_LIST_DIR)
+    except OSError as e:
+        logging.exception("CSV 내보내기 실패")
+        return jsonify({"error": str(e)}), 500
+    add_log(f"CSV 내보내기: {out_path.name}")
+    return jsonify(
+        {
+            "message": "내보내기 완료",
+            "filename": out_path.name,
+        }
+    )
+
+
+@app.route('/api/access_list/export/csv/site', methods=['POST'])
+def access_list_export_csv_site():
+    """선택한 access_list JSON 한 건만 CSV로 저장한다."""
+    data = request.get_json(silent=True) or {}
+    filename = data.get("filename")
+    if not filename or not _safe_access_list_filename(str(filename)):
+        return jsonify({"error": "잘못된 파일명입니다"}), 400
+    path = ACCESS_LIST_DIR / filename
+    if not path.is_file():
+        return jsonify({"error": "파일을 찾을 수 없습니다"}), 404
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    md_filename = DATA_DIR / f"report_{timestamp}.md"
-    
-    with open(md_filename, 'w', encoding='utf-8') as f:
-        f.write(md_content)
-    
-    add_log(f"Markdown 내보내기 완료: {md_filename.name}")
-    
-    return jsonify({
-        "message": "내보내기 완료",
-        "filename": md_filename.name,
-        "content": md_content
-    })
+    stem = Path(filename).stem
+    out_path = CSV_DATA_DIR / f"access_list_{stem}_{timestamp}.csv"
+    try:
+        write_access_list_csv_for_file(out_path, path)
+    except OSError as e:
+        logging.exception("CSV(단일 사이트) 내보내기 실패")
+        return jsonify({"error": str(e)}), 500
+    logging.info("CSV 단일 사이트: %s", out_path.name)
+    return jsonify({"ok": True, "filename": out_path.name})
+
+
+@app.route('/api/access_list/export/csv/zip', methods=['POST'])
+def access_list_export_csv_zip():
+    """사이트마다 CSV를 분리해 하나의 ZIP으로 저장한다."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out_path = CSV_DATA_DIR / f"access_list_by_site_{timestamp}.zip"
+    try:
+        write_access_list_csv_zip_per_site(out_path, ACCESS_LIST_DIR)
+    except OSError as e:
+        logging.exception("CSV ZIP 내보내기 실패")
+        return jsonify({"error": str(e)}), 500
+    logging.info("CSV ZIP: %s", out_path.name)
+    return jsonify({"ok": True, "filename": out_path.name})
+
+
+def _mimetype_for_download(name: str) -> str:
+    lower = name.lower()
+    if lower.endswith(".csv"):
+        return "text/csv; charset=utf-8"
+    if lower.endswith(".zip"):
+        return "application/zip"
+    return mimetypes.guess_type(name)[0] or "application/octet-stream"
 
 
 @app.route('/api/export/download/<filename>')
 def download_file(filename):
-    """파일 다운로드"""
-    # 보안: 경로 조작 방지
+    """파일 다운로드. csv_data의 CSV/ZIP는 응답 직전에 삭제(생성→다운로드→삭제)."""
     safe_filename = os.path.basename(filename)
-    
-    # JSON 또는 MD 파일 찾기
-    for directory in [DATA_DIR, HISTORY_DIR]:
-        filepath = directory / safe_filename
-        if filepath.exists():
+    if not safe_filename or safe_filename in (".", "..") or ".." in safe_filename:
+        return jsonify({"error": "잘못된 파일명입니다"}), 400
+
+    csv_path = (CSV_DATA_DIR / safe_filename).resolve()
+    try:
+        csv_path.relative_to(CSV_DATA_DIR.resolve())
+    except ValueError:
+        return jsonify({"error": "허용되지 않은 경로입니다"}), 400
+
+    if csv_path.is_file():
+        try:
+            payload = csv_path.read_bytes()
+        except OSError:
+            return jsonify({"error": "파일을 읽을 수 없습니다"}), 500
+        try:
+            csv_path.unlink()
+        except OSError:
+            pass
+        return send_file(
+            io.BytesIO(payload),
+            as_attachment=True,
+            download_name=safe_filename,
+            mimetype=_mimetype_for_download(safe_filename),
+        )
+
+    for directory in (DATA_DIR, HISTORY_DIR):
+        filepath = (directory / safe_filename).resolve()
+        try:
+            filepath.relative_to(directory.resolve())
+        except ValueError:
+            continue
+        if filepath.is_file():
             return send_file(filepath, as_attachment=True)
+
+    return jsonify({"error": "파일을 찾을 수 없습니다"}), 404
 
 
 # ========================================
